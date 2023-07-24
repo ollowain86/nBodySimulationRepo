@@ -154,11 +154,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="Visualizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helperTypesAndFunctions.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Simulation.h" />
+    <ClInclude Include="Visualizer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

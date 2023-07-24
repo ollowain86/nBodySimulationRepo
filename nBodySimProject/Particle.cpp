@@ -15,3 +15,17 @@ void Particle::setPos(const helpers::vec2f& i_Pos)
 {
 	m_pos = i_Pos;
 }
+
+float Particle::getMass()
+{
+	return m_mass;
+}
+
+helpers::vec2f Particle::getVel()
+{
+	return m_vel;
+}
+helpers::vec2f Particle::getPos()
+{
+	return m_pos;
+}
