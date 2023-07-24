@@ -1,27 +1,27 @@
 #include <iostream>
 #include "SFML/Graphics.hpp"
+#include "Simulation.h"
+#include <vector>
+#include "Particle.h"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Circle");
+    //number of particles
+    size_t numOfParticles{ 2U };
+    Simulation simulation(numOfParticles);
 
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
 
-        window.clear(sf::Color::White);
+    std::vector<Particle> particleContainer;
 
-        // Create a circle shape
-        sf::CircleShape circle(50.0f);
-        circle.setFillColor(sf::Color::Red);
-        circle.setPosition(375.0f, 275.0f);
+    Particle tmpParticle;
+    for (size_t i = 0; i < numOfParticles; i++)
+    {
+        tmpParticle.setMass(10.0F);
+        tmpParticle.setPos({i*10.0F, i*10.0F});
+        tmpParticle.setPos({ i*3.0F, i*3.0F });
 
-        window.draw(circle);
-
-        window.display();
+        particleContainer.push_back(tmpParticle);
     }
+
     return 0;
 }
