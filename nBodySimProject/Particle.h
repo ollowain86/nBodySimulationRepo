@@ -3,15 +3,12 @@
 class Particle
 {
 public:
-	void setMass(const float i_mass);
-	void setPos(const helpers::vec2f& i_Pos);
-	void setVel(const helpers::vec2f& i_Vel);
-	float getMass();
-	helpers::vec2f getPos();
-	helpers::vec2f getVel();
-private:
 	helpers::vec2f m_pos;
 	helpers::vec2f m_vel;
+	helpers::vec2f m_vel_half_dt;
+	helpers::vec2f m_accel;
 	float m_mass;
+private:
+	
 };
 
