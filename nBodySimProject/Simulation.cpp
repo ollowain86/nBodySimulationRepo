@@ -19,19 +19,30 @@ void Simulation::setUpSimulation()
         if (i==0)
         {
             tmpParticle.m_mass = 1000.0F;
-            tmpParticle.m_pos.x = 950.0F;
-            tmpParticle.m_pos.y = 500.0F;
-            tmpParticle.m_vel.x = 0.0F;
-            tmpParticle.m_vel.y = 0.0F;
+            tmpParticle.m_pos.x = 2.0F;
+            tmpParticle.m_pos.y = 4.0F;
+            tmpParticle.m_vel.x = 3.0F;
+            tmpParticle.m_vel.y = -1.0F;
             tmpParticle.m_accel.x = 0.0F;
             tmpParticle.m_accel.y = 0.0F;
         }
         if (i == 1)
         {
-            tmpParticle.m_mass = 10.0F;
-            tmpParticle.m_pos.x = 950.0F;
-            tmpParticle.m_pos.y = 300.0F;
-            tmpParticle.m_vel.x = 20.0F;
+            tmpParticle.m_mass = 2000.0F;
+            tmpParticle.m_pos.x = 6.0F;
+            tmpParticle.m_pos.y = 1.0F;
+            tmpParticle.m_vel.x = 0.0F;
+            tmpParticle.m_vel.y = 1.0F;
+            tmpParticle.m_accel.x = 0.0F;
+            tmpParticle.m_accel.y = 0.0F;
+        }
+
+        if (i == 2)
+        {
+            tmpParticle.m_mass = 3000.0F;
+            tmpParticle.m_pos.x = 1.0F;
+            tmpParticle.m_pos.y = 1.0F;
+            tmpParticle.m_vel.x = 1.0F;
             tmpParticle.m_vel.y = 0.0F;
             tmpParticle.m_accel.x = 0.0F;
             tmpParticle.m_accel.y = 0.0F;
@@ -69,12 +80,12 @@ void Simulation::calculateAcceleration(Particle& particle)
             distanceSquared = deltaX * deltaX + deltaY * deltaY;
 
             // Calculate the gravitational force magnitude
-            float forceMagnitude = -gravitationalConstant * otherParticle.m_mass / distanceSquared;
+            float forceMagnitude = gravitationalConstant * otherParticle.m_mass / distanceSquared;
 
             // Calculate the components of the gravitational acceleration
             alpha = std::asin(deltaY / std::sqrt(distanceSquared));
             float accelerationX = forceMagnitude * std::cos(alpha);
-            float accelerationY = -forceMagnitude * std::sin(alpha);
+            float accelerationY = forceMagnitude * std::sin(alpha);
 
             // Add the components to the particle's acceleration
             particle.m_accel.x += accelerationX;
