@@ -6,13 +6,14 @@ class Visualizer
 {
 public:
 	//ctor takes the particle container, assigns it to the visualContainer and calls the visualizing
-	Visualizer(const size_t i_numberOfParticles);
+	Visualizer(const size_t i_numberOfParticles, const float i_scale);
 	void render();
 	void synchSimAndVisualization();
 private:
 	std::vector<sf::CircleShape> m_circleContainer;
 	void setUpCircleContainer();
 	Simulation m_sim;
+	float m_scale;
 	sf::CircleShape m_tmpCircle;
 };
 
