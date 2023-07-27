@@ -109,7 +109,7 @@ void Visualizer::render()
 			frameCount = 0;
 		}
 
-		m_sim.moveParticles(100.0F);
+		m_sim.moveParticles(1.0F);
 		synchSimAndVisualization();
 		//m_sim.calcTotalEnergy();
 		//m_sim.writeOutData();

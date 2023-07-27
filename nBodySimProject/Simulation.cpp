@@ -16,6 +16,32 @@ Simulation::Simulation(const size_t i_numOfParticles, const float i_scale) : m_n
 // assigns pos, vel and mass to the particles
 void Simulation::setUpSimulation()
 {
+    Particle tmpParticle;
+    for (size_t i = 0; i < m_numberOfParticles; i++)
+    {
+        if (i==0)
+        {
+            tmpParticle.m_mass = 10.0F;
+            tmpParticle.m_pos.x = 1050;
+            tmpParticle.m_pos.y = 500.0;
+            tmpParticle.m_vel.x = 0.0;
+            tmpParticle.m_vel.y = 2.0;
+            tmpParticle.m_accel.x = 0.0F;
+            tmpParticle.m_accel.y = 0.0F;
+        }
+        else
+        {
+            tmpParticle.m_mass = 1000.0F;
+            tmpParticle.m_pos.x = 800.0;
+            tmpParticle.m_pos.y = 500.0;
+            tmpParticle.m_vel.x = 0.0;
+            tmpParticle.m_vel.y = 0.0;
+            tmpParticle.m_accel.x = 0.0F;
+            tmpParticle.m_accel.y = 0.0F;
+        }
+        m_particleContainer.push_back(tmpParticle);
+    }
+    /*
     std::random_device rd;
     std::mt19937 gen(rd());
     float secondScale = m_scale/1.0;
@@ -44,6 +70,7 @@ void Simulation::setUpSimulation()
         tmpParticle.m_accel.y = 0.0F;
         m_particleContainer.push_back(tmpParticle);
     }
+    */
 
     // calc accel initially
     for (size_t i = 0; i < m_particleContainer.size(); i++)
@@ -63,7 +90,7 @@ void Simulation::calculateAcceleration(Particle& particle)
     float deltaY{ 0.0F };
     float distance{ 0.0F };
     float alpha{ 0.0F };
-    float plummerEpsilonSqd{ 100.0F };
+    float plummerEpsilonSqd{ 1.0F };
     const float gravitationalConstant{ 1.0F };
     for (const Particle& otherParticle : m_particleContainer)
     {

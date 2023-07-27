@@ -1,0 +1,16 @@
+What should be done for a correct simulation:
+
+- Plummerradius calculation with https://upload.wikimedia.org/wikibooks/de/f/fd/MehrkoerperproblemInDerAstronomie.pdf - Page 107
+- Dynamic time steps Page 113
+- Rendering every "x" time units (ask GPT)
+
+Nice to have:
+
+- Barnes-Hut
+- Threading
+
+Options:
+
+- Colors and effects (e.g. kinetic energy colors)
+- Different options to simulate (Solar system, global potential for galactic simulation, globular cluster)
+- merges
