@@ -1,8 +1,12 @@
 What should be done for a correct simulation:
 
 - Plummerradius calculation with https://upload.wikimedia.org/wikibooks/de/f/fd/MehrkoerperproblemInDerAstronomie.pdf - Page 107
+ I find out: Plummerradius = R/N, where R ist the radius of the total system and N the number of particles.
+ I found out to implement a smoothing function u^2(r) to multiply with the plummer radius, page 104 ff. which works between 0 and 2*plummer.
+
+Or more complex (will not do)
 - Dynamic time steps Page 113
-- Rendering every "x" time units (ask GPT)
+-- Rendering every "x" time units (ask GPT)
 
 Nice to have:
 

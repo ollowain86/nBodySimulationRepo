@@ -62,6 +62,7 @@ void Visualizer::render()
 	TextHandler textHandler;
 	textHandler.setText(font, "FPS: ", 20U, sf::Color::White, sf::Color::White, 0.0F, 10.0F, 10.0F);
 
+	// Set clock for FPS calculation
 	sf::Clock clock;
 	sf::Time elapsed = sf::Time::Zero;
 	unsigned int frameCount = 0;
@@ -69,8 +70,10 @@ void Visualizer::render()
 
 	window.setFramerateLimit(60);
 
+	// THE SFML WHILE LOOPs
 	while (window.isOpen()) {
 		sf::Event event;
+		// POLL EVENTS
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 			{
@@ -86,6 +89,7 @@ void Visualizer::render()
 			}
 		}
 
+		// CLEAR, DRAW, DISPLAY START
 		window.clear(sf::Color::Black);
 
 		for (size_t i = 0; i < m_circleContainer.size(); i++)
@@ -96,6 +100,7 @@ void Visualizer::render()
 		window.draw(textHandler.getText());
 
 		window.display();
+		// CLEAR, DRAW, DISPLAY END
 
 		// Calculate framerate
 		elapsed += clock.restart();
