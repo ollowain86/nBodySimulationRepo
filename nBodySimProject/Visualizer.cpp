@@ -3,6 +3,9 @@
 #include <vector>
 #include "Simulation.h"
 #include "Particle.h"
+#include "TextHandler.h"
+#include "RectangleHandler.h"
+#include <string>
 
 Visualizer::Visualizer(const size_t i_numberOfParticles, const float i_scale) : m_sim(i_numberOfParticles, i_scale), m_scale(i_scale)
 {
@@ -56,11 +59,8 @@ void Visualizer::render()
 	}
 
 	// Text object to display the framerate
-	sf::Text fpsText;
-	fpsText.setFont(font);
-	fpsText.setCharacterSize(20);
-	fpsText.setFillColor(sf::Color::White);
-	fpsText.setPosition(10.f, 10.f); // Top-left corner
+	TextHandler textHandler;
+	textHandler.setText(font, "FPS: ", 20U, sf::Color::White, sf::Color::White, 0.0F, 10.0F, 10.0F);
 
 	sf::Clock clock;
 	sf::Time elapsed = sf::Time::Zero;
@@ -93,7 +93,7 @@ void Visualizer::render()
 			window.draw(m_circleContainer[i]);
 		}
 
-		window.draw(fpsText);
+		window.draw(textHandler.getText());
 
 		window.display();
 
@@ -103,7 +103,7 @@ void Visualizer::render()
 		if (elapsed >= updateRate)
 		{
 			float fps = static_cast<float>(frameCount) / elapsed.asSeconds();
-			fpsText.setString("FPS: " + std::to_string(static_cast<int>(fps)));
+			textHandler.setString("FPS: " + std::to_string(static_cast<int>(fps)));
 
 			elapsed = sf::Time::Zero;
 			frameCount = 0;

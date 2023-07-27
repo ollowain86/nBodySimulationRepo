@@ -153,13 +153,17 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="RectangleHandler.cpp" />
     <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="TextHandler.cpp" />
     <ClCompile Include="Visualizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helperTypesAndFunctions.h" />
     <ClInclude Include="Particle.h" />
+    <ClInclude Include="RectangleHandler.h" />
     <ClInclude Include="Simulation.h" />
+    <ClInclude Include="TextHandler.h" />
     <ClInclude Include="Visualizer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
