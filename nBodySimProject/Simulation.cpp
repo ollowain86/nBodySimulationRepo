@@ -44,6 +44,9 @@ void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const uns
     }
     */
     
+    //calculate plummer radius
+    m_plummerRadiusSqd = (std::min(i_maxXlengthDistr, i_maxYlengthDistr) + std::abs(static_cast<float>(i_maxXlengthDistr - i_maxYlengthDistr)) / 2.0) / m_numberOfParticles;
+
     std::random_device rd;
     std::mt19937 gen(123456);
     double xDistrLengthMax = static_cast<double>(i_maxXlengthDistr);
