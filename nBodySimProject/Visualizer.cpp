@@ -7,10 +7,10 @@
 #include "RectangleHandler.h"
 #include <string>
 
-Visualizer::Visualizer(const size_t i_numberOfParticles, const float i_scale, const float i_gravitationalConstant) : m_sim(i_numberOfParticles, i_scale, i_gravitationalConstant), m_scale(i_scale)
+Visualizer::Visualizer(const size_t i_numberOfParticles, const float i_scale, const float i_gravitationalConstant, const unsigned int i_edgeFreePixels) : m_sim(i_numberOfParticles, i_scale, i_gravitationalConstant, i_edgeFreePixels), m_scale(i_scale), m_edgeFreePixels(i_edgeFreePixels)
 {
 	//creates particle container with i_numberOfParticles, each particle has pos, vel and mass
-	m_sim.setUpSimulation();
+	m_sim.setUpSimulation(m_desktopMode.width, m_desktopMode.height);
 	// takes the particle from the simulation and fills the m_circleContainer
 	setUpCircleContainer();
 }
@@ -48,11 +48,8 @@ void Visualizer::synchSimAndVisualization()
 void Visualizer::render()
 {
 	// SFML
-	
-	// Get the current desktop video mode
-	sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
 	// Use the desktop resolution for the window size
-	sf::RenderWindow window(sf::VideoMode(desktopMode.width, desktopMode.height), "N-Body Gravity Simulation");
+	sf::RenderWindow window(sf::VideoMode(m_desktopMode.width, m_desktopMode.height), "N-Body Gravity Simulation");
 
 	// Font for displaying the framerate
 	sf::Font font;

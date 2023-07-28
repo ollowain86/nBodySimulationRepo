@@ -1,12 +1,13 @@
 #include <vector>
 #include "Particle.h"
+
 #pragma once
 class Simulation
 {
 public:
-	Simulation(const size_t i_numOfParticles, const float i_scale, const float i_gravitationalConstant);
+	Simulation(const size_t i_numOfParticles, const float i_scale, const float i_gravitationalConstant, const unsigned int i_edgeFreePixels);
 	// assigns pos, vel and mass to the particles
-	void setUpSimulation();
+	void setUpSimulation(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr);
 	//return the m_particleContainer
 	const std::vector<Particle>& getParticleContainer() const;
 	//moves the particles for dt
@@ -32,5 +33,7 @@ private:
 	float m_accelMagnitude{ 0.0F };
 	float m_accelerationX{ 0.0F };
 	float m_accelerationY{ 0.0F };
+	//important for visualizing and particle distribution
+	const unsigned int m_edgeFreePixels{ 0U };
 };
 

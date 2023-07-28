@@ -6,14 +6,17 @@ class Visualizer
 {
 public:
 	//ctor takes the particle container, assigns it to the visualContainer and calls the visualizing
-	Visualizer(const size_t i_numberOfParticles, const float i_scale, const float i_gravitationalConstant);
+	Visualizer(const size_t i_numberOfParticles, const float i_scale, const float i_gravitationalConstant, const unsigned int i_edgeFreePixels);
 	void render();
 	void synchSimAndVisualization();
 private:
 	std::vector<sf::CircleShape> m_circleContainer;
 	void setUpCircleContainer();
 	Simulation m_sim;
-	float m_scale;
+	const float m_scale{ 0.0F };
 	sf::CircleShape m_tmpCircle;
+
+	sf::VideoMode m_desktopMode{ sf::VideoMode::getDesktopMode() };
+	const unsigned int m_edgeFreePixels{ 0U };
 };
 

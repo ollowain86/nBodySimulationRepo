@@ -8,13 +8,13 @@
 #include <random>
 
 //ctor
-Simulation::Simulation(const size_t i_numOfParticles, const float i_scale, const float i_gravitationalConstant) : m_numberOfParticles(i_numOfParticles), m_scale(i_scale), m_gravitationalConstant(i_gravitationalConstant)
+Simulation::Simulation(const size_t i_numOfParticles, const float i_scale, const float i_gravitationalConstant, const unsigned int i_edgeFreePixels) : m_numberOfParticles(i_numOfParticles), m_scale(i_scale), m_gravitationalConstant(i_gravitationalConstant), m_edgeFreePixels(i_edgeFreePixels)
 {
 
 }
 
 // assigns pos, vel and mass to the particles
-void Simulation::setUpSimulation()
+void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr)
 {
     Particle tmpParticle;
     for (size_t i = 0; i < m_numberOfParticles; i++)
