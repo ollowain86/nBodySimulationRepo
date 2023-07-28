@@ -52,8 +52,8 @@ void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const uns
     double xDistrLengthMax = static_cast<double>(i_maxXlengthDistr);
     double yDistrLengthMax = static_cast<double>(i_maxYlengthDistr);
     float secondScale = m_scale/1.0;
-    std::uniform_real_distribution<double> distr_x(static_cast<double>(m_edgeFreePixels) * secondScale, xDistrLengthMax - static_cast<double>(m_edgeFreePixels) * secondScale);
-    std::uniform_real_distribution<double> distr_y(static_cast<double>(m_edgeFreePixels) * secondScale, yDistrLengthMax - static_cast<double>(m_edgeFreePixels) * secondScale);
+    std::uniform_real_distribution<double> distr_x(static_cast<double>(m_edgeFreePixels) * secondScale, (xDistrLengthMax - static_cast<double>(m_edgeFreePixels)) * secondScale);
+    std::uniform_real_distribution<double> distr_y(static_cast<double>(m_edgeFreePixels) * secondScale, (yDistrLengthMax - static_cast<double>(m_edgeFreePixels)) * secondScale);
     std::uniform_real_distribution<double> distrVel_x(-10.0, 10.0F);
     std::uniform_real_distribution<double> distrVel_y(-10.0, 10.0F);
     Particle tmpParticle;
