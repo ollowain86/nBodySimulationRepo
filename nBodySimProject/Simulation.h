@@ -4,7 +4,7 @@
 class Simulation
 {
 public:
-	Simulation(const size_t i_numOfParticles, const float i_scale);
+	Simulation(const size_t i_numOfParticles, const float i_scale, const float i_gravitationalConstant);
 	// assigns pos, vel and mass to the particles
 	void setUpSimulation();
 	//return the m_particleContainer
@@ -30,7 +30,7 @@ private:
 	float m_plummerRadiusSqd{ 1.0F };
 	const float m_gravitationalConstant{ 1.0F };
 	float m_accelMagnitude{ 0.0F };
-	float accelerationX{ 0.0F };
-	float accelerationY{ 0.0F };
+	float m_accelerationX{ 0.0F };
+	float m_accelerationY{ 0.0F };
 };
 

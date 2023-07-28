@@ -8,7 +8,7 @@
 #include <random>
 
 //ctor
-Simulation::Simulation(const size_t i_numOfParticles, const float i_scale) : m_numberOfParticles(i_numOfParticles), m_scale(i_scale)
+Simulation::Simulation(const size_t i_numOfParticles, const float i_scale, const float i_gravitationalConstant) : m_numberOfParticles(i_numOfParticles), m_scale(i_scale), m_gravitationalConstant(i_gravitationalConstant)
 {
 
 }

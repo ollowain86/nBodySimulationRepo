@@ -7,7 +7,7 @@
 #include "RectangleHandler.h"
 #include <string>
 
-Visualizer::Visualizer(const size_t i_numberOfParticles, const float i_scale) : m_sim(i_numberOfParticles, i_scale), m_scale(i_scale)
+Visualizer::Visualizer(const size_t i_numberOfParticles, const float i_scale, const float i_gravitationalConstant) : m_sim(i_numberOfParticles, i_scale, i_gravitationalConstant), m_scale(i_scale)
 {
 	//creates particle container with i_numberOfParticles, each particle has pos, vel and mass
 	m_sim.setUpSimulation();

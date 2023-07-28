@@ -6,7 +6,7 @@ class Visualizer
 {
 public:
 	//ctor takes the particle container, assigns it to the visualContainer and calls the visualizing
-	Visualizer(const size_t i_numberOfParticles, const float i_scale);
+	Visualizer(const size_t i_numberOfParticles, const float i_scale, const float i_gravitationalConstant);
 	void render();
 	void synchSimAndVisualization();
 private:
