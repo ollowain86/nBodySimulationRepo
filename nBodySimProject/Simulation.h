@@ -23,5 +23,11 @@ private:
 	const float m_scale{ 0.0F };
 	// particle container
 	std::vector<Particle> m_particleContainer;
+	// simulation parameters
+	float m_deltaX{ 0.0F };
+	float m_deltaY{ 0.0F };
+	float m_distance{ 0.0F };
+	float m_plummerRadiusSqd{ 1.0F };
+	const float m_gravitationalConstant{ 1.0F };
 };
 

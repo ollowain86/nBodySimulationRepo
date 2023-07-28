@@ -86,27 +86,21 @@ const std::vector<Particle>& Simulation::getParticleContainer() const
 
 void Simulation::calculateAcceleration(Particle& particle)
 {
-    float deltaX{ 0.0F };
-    float deltaY{ 0.0F };
-    float distance{ 0.0F };
-    float alpha{ 0.0F };
-    float plummerEpsilonSqd{ 1.0F };
-    const float gravitationalConstant{ 1.0F };
     for (const Particle& otherParticle : m_particleContainer)
     {
         if (&particle != &otherParticle)  // Ensure not calculating for the same particle
         {
             // Calculate distance between the two particles
-            deltaX = otherParticle.m_pos.x - particle.m_pos.x;
-            deltaY = otherParticle.m_pos.y - particle.m_pos.y;
-            distance = std::sqrt(deltaX * deltaX + deltaY * deltaY);
+            m_deltaX = otherParticle.m_pos.x - particle.m_pos.x;
+            m_deltaY = otherParticle.m_pos.y - particle.m_pos.y;
+            m_distance = std::sqrt(m_deltaX * m_deltaX + m_deltaY * m_deltaY);
 
             // Calculate the gravitational force magnitude
-            float accelMagnitude = gravitationalConstant * otherParticle.m_mass / (distance*distance+plummerEpsilonSqd);
+            float accelMagnitude = m_gravitationalConstant * otherParticle.m_mass / (m_distance*m_distance+m_plummerRadiusSqd);
 
             // Calculate the components of the gravitational acceleration
-            float accelerationX = accelMagnitude * (deltaX / distance);
-            float accelerationY = accelMagnitude * (deltaY / distance);
+            float accelerationX = accelMagnitude * (m_deltaX / m_distance);
+            float accelerationY = accelMagnitude * (m_deltaY / m_distance);
 
             // Add the components to the particle's acceleration
             particle.m_accel.x += accelerationX;
