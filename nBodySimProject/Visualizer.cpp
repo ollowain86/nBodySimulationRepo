@@ -48,19 +48,29 @@ void Visualizer::synchSimAndVisualization()
 void Visualizer::render()
 {
 	// SFML
-	sf::RenderWindow window(sf::VideoMode(1900, 1000), "N-Body Gravity Simulation");
+	
+	// Get the current desktop video mode
+	sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
+	// Use the desktop resolution for the window size
+	sf::RenderWindow window(sf::VideoMode(desktopMode.width, desktopMode.height), "N-Body Gravity Simulation");
 
 	// Font for displaying the framerate
 	sf::Font font;
 	if (!font.loadFromFile("../nBodySimProject/arial.ttf"))
 	{
-		// Handle font loading error
-		// Replace "arial.ttf" with the path to your desired font file
+		//do nothing
 	}
 
 	// Text object to display the framerate
+	std::string tmpString = "FPS: ";
+	unsigned int tmpCharSize = 20U;
+	sf::Color tmpFillColor = sf::Color::White;
+	sf::Color tmpOutlineColor = sf::Color::White;
+	float tmpOutlineThickness = 0.0F;
+	float tmpPosX = 0.0F;
+	float tmpPosY = 0.0F;
 	TextHandler textHandler;
-	textHandler.setText(font, "FPS: ", 20U, sf::Color::White, sf::Color::White, 0.0F, 10.0F, 10.0F);
+	textHandler.setText(font, tmpString, tmpCharSize, tmpFillColor, tmpOutlineColor, tmpOutlineThickness, tmpPosX, tmpPosY);
 
 	// Set clock for FPS calculation
 	sf::Clock clock;
