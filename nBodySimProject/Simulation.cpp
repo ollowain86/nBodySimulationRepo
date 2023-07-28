@@ -16,6 +16,7 @@ Simulation::Simulation(const size_t i_numOfParticles, const float i_scale, const
 // assigns pos, vel and mass to the particles
 void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr)
 {
+    /*
     Particle tmpParticle;
     for (size_t i = 0; i < m_numberOfParticles; i++)
     {
@@ -41,12 +42,15 @@ void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const uns
         }
         m_particleContainer.push_back(tmpParticle);
     }
-    /*
+    */
+    
     std::random_device rd;
-    std::mt19937 gen(rd());
+    std::mt19937 gen(123456);
+    double xDistrLengthMax = static_cast<double>(i_maxXlengthDistr);
+    double yDistrLengthMax = static_cast<double>(i_maxYlengthDistr);
     float secondScale = m_scale/1.0;
-    std::uniform_real_distribution<double> distr_x(500.0*secondScale, 1000.0F * secondScale);
-    std::uniform_real_distribution<double> distr_y(200.0 * secondScale, 800.0F * secondScale);
+    std::uniform_real_distribution<double> distr_x(static_cast<double>(m_edgeFreePixels) * secondScale, xDistrLengthMax - static_cast<double>(m_edgeFreePixels) * secondScale);
+    std::uniform_real_distribution<double> distr_y(static_cast<double>(m_edgeFreePixels) * secondScale, yDistrLengthMax - static_cast<double>(m_edgeFreePixels) * secondScale);
     std::uniform_real_distribution<double> distrVel_x(-10.0, 10.0F);
     std::uniform_real_distribution<double> distrVel_y(-10.0, 10.0F);
     Particle tmpParticle;
@@ -70,7 +74,6 @@ void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const uns
         tmpParticle.m_accel.y = 0.0F;
         m_particleContainer.push_back(tmpParticle);
     }
-    */
 
     // calc accel initially
     for (size_t i = 0; i < m_particleContainer.size(); i++)
