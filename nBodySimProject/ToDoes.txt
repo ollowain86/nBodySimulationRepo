@@ -5,6 +5,8 @@ What should be done for a correct simulation:
  I found out to implement a smoothing function u^2(r) to multiply with the plummer radius, page 104 ff. which works between 0 and 2*plummer.
  
  -> DONE
+ 
+Test if forces are calculated correctly, especially for the plummer radius
 
 
 Nice to have:
