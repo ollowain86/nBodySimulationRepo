@@ -6,18 +6,25 @@ class Simulation
 {
 public:
 	Simulation(const size_t i_numOfParticles, const float i_scale, const float i_gravitationalConstant, const unsigned int i_edgeFreePixels);
-	// assigns pos, vel and mass to the particles
-	void setUpSimulation(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr);
 	//return the m_particleContainer
 	const std::vector<Particle>& getParticleContainer() const;
 	//moves the particles for dt
 	void moveParticles(const float i_dt);
 	void calcTotalEnergy();
 	void writeOutData();
+	// TESTING AND DEBUGGING
+	// i_option: 0U = normal, 1U predefined 2 particle system, 2U predefined 3 particle system
+	void setUpSelector(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const unsigned int i_option);
+	void setUpTwoParticle();
+	void setUpThreeParticle();
+	bool floatEqual(const float a, const float b);
 private:
 	//######## METHODS ########
 	void leapfrogUpdate(const float i_dt);
 	void calculateAcceleration(Particle& particle);
+	void calculatePlummerRadius();
+	// assigns pos, vel and mass to the particles
+	void setUpSimulation(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr);
 	//######## PARAMETERS ########
 	// number of Particles in the Sim
 	const size_t m_numberOfParticles{ 0U };

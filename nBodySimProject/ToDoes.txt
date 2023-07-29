@@ -6,9 +6,6 @@ What should be done for a correct simulation:
  
  -> DONE
 
-Or more complex (will not do)
-- Dynamic time steps Page 113
--- Rendering every "x" time units (ask GPT)
 
 Nice to have:
 

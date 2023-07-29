@@ -10,7 +10,7 @@
 Visualizer::Visualizer(const size_t i_numberOfParticles, const float i_scale, const float i_gravitationalConstant, const unsigned int i_edgeFreePixels) : m_sim(i_numberOfParticles, i_scale, i_gravitationalConstant, i_edgeFreePixels), m_scale(i_scale), m_edgeFreePixels(i_edgeFreePixels)
 {
 	//creates particle container with i_numberOfParticles, each particle has pos, vel and mass
-	m_sim.setUpSimulation(m_desktopMode.width, m_desktopMode.height);
+	m_sim.setUpSelector(m_desktopMode.width, m_desktopMode.height, 0U);
 	// takes the particle from the simulation and fills the m_circleContainer
 	setUpCircleContainer();
 }

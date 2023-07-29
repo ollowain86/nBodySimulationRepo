@@ -13,37 +13,124 @@ Simulation::Simulation(const size_t i_numOfParticles, const float i_scale, const
 
 }
 
-// assigns pos, vel and mass to the particles
-void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr)
+void Simulation::setUpSelector(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const unsigned int i_option)
 {
-    /*
-    Particle tmpParticle;
-    for (size_t i = 0; i < m_numberOfParticles; i++)
+    // random setup with hardcoded seed
+    if (i_option == 0U)
     {
-        if (i==0)
+        setUpSimulation(i_maxXlengthDistr, i_maxYlengthDistr);
+    }
+    // hardcoded 2 particle system
+    else if(i_option == 1U)
+    {
+        setUpTwoParticle();
+    }
+    // hardcoded 3 particle system
+    else if (i_option == 2U)
+    {
+
+    }
+    else
+    {
+        std::cout << "In setUpSelector, not-defined option is selected." << std::endl;
+    }
+}
+
+bool Simulation::floatEqual(const float a, const float b)
+{
+    bool isEqual = false;
+    float epsilon = 10e-5;
+
+    if (std::abs(a-b)<epsilon)
+    {
+        isEqual = true;
+    }
+    return isEqual;
+}
+
+void Simulation::setUpTwoParticle()
+{
+    // Circular orbit: v = sqrt(G*M/radius)
+    Particle tmpParticle;
+    for (size_t i = 0; i < 2U; i++)
+    {
+        if (i == 0)
         {
-            tmpParticle.m_mass = 10.0F;
-            tmpParticle.m_pos.x = 1050;
-            tmpParticle.m_pos.y = 500.0;
-            tmpParticle.m_vel.x = 0.0;
-            tmpParticle.m_vel.y = 2.0;
+            tmpParticle.m_mass = 1000.0F;
+            tmpParticle.m_pos.x = 500.0F;
+            tmpParticle.m_pos.y = 500.0F;
+            tmpParticle.m_vel.x = 0.0F;
+            tmpParticle.m_vel.y = 0.0F;
             tmpParticle.m_accel.x = 0.0F;
             tmpParticle.m_accel.y = 0.0F;
         }
         else
         {
-            tmpParticle.m_mass = 1000.0F;
-            tmpParticle.m_pos.x = 800.0;
+            tmpParticle.m_mass = 10.0F;
+            tmpParticle.m_pos.x = 510.0;
             tmpParticle.m_pos.y = 500.0;
             tmpParticle.m_vel.x = 0.0;
-            tmpParticle.m_vel.y = 0.0;
+            tmpParticle.m_vel.y = 10.0;
             tmpParticle.m_accel.x = 0.0F;
             tmpParticle.m_accel.y = 0.0F;
         }
         m_particleContainer.push_back(tmpParticle);
     }
-    */
-    
+    // should not matter, since for a radius > 2*plummer it is normal newton
+    m_plummerRadius = 10.0F/2U;
+
+    // calc accel initially
+    for (size_t i = 0; i < m_particleContainer.size(); i++)
+    {
+        calculateAcceleration(m_particleContainer[i]);
+    }
+
+    float expected_ax{0.0F};
+    float expected_ay{ 0.0F };
+    float expected_a{ 0.0F };
+    float distance{ 0.0F };
+    float deltaX{ 0.0F };
+    float deltaY{ 0.0F };
+    float accelMagnitude{ 0.0F };
+    for (size_t i = 0; i < m_particleContainer.size(); i++)
+    {
+        for (size_t j = 0; j < m_particleContainer.size(); j++)
+        {
+            if (i != j)
+            {
+                deltaX = m_particleContainer[j].m_pos.x - m_particleContainer[i].m_pos.x;
+                deltaY = m_particleContainer[j].m_pos.y - m_particleContainer[i].m_pos.y;
+                distance = std::sqrt(deltaX * deltaX + deltaY * deltaY);
+                accelMagnitude += m_particleContainer[j].m_mass/(distance* distance);
+                if (i == 0U)
+                {
+                    expected_a = 1/10.0F;
+                    expected_ax = expected_a * 10.0F/10.0F;
+                    expected_ay = expected_a * 0.0F / 10.0F;
+                }
+                else
+                {
+                    expected_a = 10.0F;
+                    expected_ax = -10.0F;
+                    expected_ay = 0.0F;
+                }
+                if (!floatEqual(accelMagnitude, expected_a))
+                {
+                    std::cout << "Two Particle Sys: accelMagnitude wrong!" << std::endl;
+                }
+                if (!floatEqual(accelMagnitude*deltaX/distance, expected_ax) || !floatEqual(accelMagnitude * deltaY / distance, expected_ay))
+                {
+                    std::cout << "Two Particle Sys: ax or ay is wrong!" << std::endl;
+                }
+            }
+            accelMagnitude = 0.0F;
+        }
+    }
+}
+
+// assigns pos, vel and mass to the particles
+void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr)
+{   
     // Calculate plummer radius = radius of simulation / number of particles
     // For rectangular shapes (a x b) -> min(a,b) + abs(a-b)/2, e.g. a = 1000, b = 500 -> 500 + 250 = 750
     m_plummerRadius = (std::min(i_maxXlengthDistr, i_maxYlengthDistr) + std::abs(static_cast<float>(i_maxXlengthDistr - i_maxYlengthDistr)) / 2.0) / m_numberOfParticles;
@@ -52,7 +139,7 @@ void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const uns
     std::mt19937 gen(123456);
     double xDistrLengthMax = static_cast<double>(i_maxXlengthDistr);
     double yDistrLengthMax = static_cast<double>(i_maxYlengthDistr);
-    float secondScale = m_scale/1.0;
+    float secondScale = m_scale / 1.0;
     std::uniform_real_distribution<double> distr_x(static_cast<double>(m_edgeFreePixels) * secondScale, (xDistrLengthMax - static_cast<double>(m_edgeFreePixels)) * secondScale);
     std::uniform_real_distribution<double> distr_y(static_cast<double>(m_edgeFreePixels) * secondScale, (yDistrLengthMax - static_cast<double>(m_edgeFreePixels)) * secondScale);
     std::uniform_real_distribution<double> distrVel_x(-10.0, 10.0F);

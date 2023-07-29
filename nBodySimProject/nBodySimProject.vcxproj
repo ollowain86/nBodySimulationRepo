@@ -155,6 +155,7 @@
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="RectangleHandler.cpp" />
     <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="TestinClass.cpp" />
     <ClCompile Include="TextHandler.cpp" />
     <ClCompile Include="Visualizer.cpp" />
   </ItemGroup>
@@ -163,6 +164,7 @@
     <ClInclude Include="Particle.h" />
     <ClInclude Include="RectangleHandler.h" />
     <ClInclude Include="Simulation.h" />
+    <ClInclude Include="TestinClass.h" />
     <ClInclude Include="TextHandler.h" />
     <ClInclude Include="Visualizer.h" />
   </ItemGroup>
