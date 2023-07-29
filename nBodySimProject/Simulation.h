@@ -28,7 +28,8 @@ private:
 	float m_deltaX{ 0.0F };
 	float m_deltaY{ 0.0F };
 	float m_distance{ 0.0F };
-	float m_plummerRadiusSqd{ 1.0F };
+	float m_distanceSqrd{ 0.0F };
+	float m_plummerRadius{ 1.0F };
 	const float m_gravitationalConstant{ 1.0F };
 	float m_accelMagnitude{ 0.0F };
 	float m_accelerationX{ 0.0F };

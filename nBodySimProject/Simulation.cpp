@@ -44,8 +44,9 @@ void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const uns
     }
     */
     
-    //calculate plummer radius
-    m_plummerRadiusSqd = (std::min(i_maxXlengthDistr, i_maxYlengthDistr) + std::abs(static_cast<float>(i_maxXlengthDistr - i_maxYlengthDistr)) / 2.0) / m_numberOfParticles;
+    // Calculate plummer radius = radius of simulation / number of particles
+    // For rectangular shapes (a x b) -> min(a,b) + abs(a-b)/2, e.g. a = 1000, b = 500 -> 500 + 250 = 750
+    m_plummerRadius = (std::min(i_maxXlengthDistr, i_maxYlengthDistr) + std::abs(static_cast<float>(i_maxXlengthDistr - i_maxYlengthDistr)) / 2.0) / m_numberOfParticles;
 
     std::random_device rd;
     std::mt19937 gen(123456);
@@ -100,15 +101,16 @@ void Simulation::calculateAcceleration(Particle& particle)
             m_deltaX = otherParticle.m_pos.x - particle.m_pos.x;
             m_deltaY = otherParticle.m_pos.y - particle.m_pos.y;
             m_distance = std::sqrt(m_deltaX * m_deltaX + m_deltaY * m_deltaY);
+            m_distanceSqrd = m_distance * m_distance;
 
             // Calculate the gravitational force magnitude
-            if (m_distance < 2.0F* std::sqrt(m_plummerRadiusSqd))
+            if (m_distance < 2.0F*m_plummerRadius)
             {
-                m_accelMagnitude = m_gravitationalConstant * otherParticle.m_mass / (m_distance * m_distance + m_plummerRadiusSqd);
+                m_accelMagnitude = m_gravitationalConstant * otherParticle.m_mass * (64.0F * m_distance * std::pow(m_plummerRadius, 3.0F)) / std::pow((m_distanceSqrd + 4.0F * m_plummerRadius * m_plummerRadius), 3.0F);
             }
             else
             {
-                m_accelMagnitude = m_gravitationalConstant * otherParticle.m_mass / (m_distance * m_distance);
+                m_accelMagnitude = m_gravitationalConstant * otherParticle.m_mass / (m_distanceSqrd);
             }
 
             // Calculate the components of the gravitational acceleration
