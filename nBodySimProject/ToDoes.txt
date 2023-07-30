@@ -7,6 +7,12 @@ What should be done for a correct simulation:
  -> DONE
  
 Test if forces are calculated correctly, especially for the plummer radius
+Make a window with bars to choose what to simulate
+ -> include globular cluster, which should be in a circular shape
+ -> make several globular clusters
+ -> make a one with a global potential in a circular shape
+ -> make a solar system
+ -> make a heavy point mass moving, accompaied by sattelites
 
 
 Nice to have:

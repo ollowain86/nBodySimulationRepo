@@ -104,12 +104,14 @@ void Simulation::setUpTwoParticle()
                 accelMagnitude += m_particleContainer[j].m_mass/(distance* distance);
                 if (i == 0U)
                 {
+                    //calculated manually
                     expected_a = 1/10.0F;
                     expected_ax = expected_a * 10.0F/10.0F;
                     expected_ay = expected_a * 0.0F / 10.0F;
                 }
                 else
                 {
+                    //calculated manually
                     expected_a = 10.0F;
                     expected_ax = -10.0F;
                     expected_ay = 0.0F;

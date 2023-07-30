@@ -7,10 +7,10 @@
 #include "RectangleHandler.h"
 #include <string>
 
-Visualizer::Visualizer(const size_t i_numberOfParticles, const float i_scale, const float i_gravitationalConstant, const unsigned int i_edgeFreePixels) : m_sim(i_numberOfParticles, i_scale, i_gravitationalConstant, i_edgeFreePixels), m_scale(i_scale), m_edgeFreePixels(i_edgeFreePixels)
+Visualizer::Visualizer(const size_t i_numberOfParticles, const float i_scale, const float i_gravitationalConstant, const unsigned int i_edgeFreePixels, const unsigned int i_option, const float i_dt) : m_sim(i_numberOfParticles, i_scale, i_gravitationalConstant, i_edgeFreePixels), m_scale(i_scale), m_edgeFreePixels(i_edgeFreePixels), m_option(i_option), m_dt(i_dt)
 {
 	//creates particle container with i_numberOfParticles, each particle has pos, vel and mass
-	m_sim.setUpSelector(m_desktopMode.width, m_desktopMode.height, 0U);
+	m_sim.setUpSelector(m_desktopMode.width, m_desktopMode.height, m_option);
 	// takes the particle from the simulation and fills the m_circleContainer
 	setUpCircleContainer();
 }
@@ -121,7 +121,7 @@ void Visualizer::render()
 			frameCount = 0;
 		}
 
-		m_sim.moveParticles(1.0F);
+		m_sim.moveParticles(m_dt);
 		synchSimAndVisualization();
 		//m_sim.calcTotalEnergy();
 		//m_sim.writeOutData();
