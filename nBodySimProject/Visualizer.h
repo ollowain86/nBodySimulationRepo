@@ -20,5 +20,6 @@ private:
 	const unsigned int m_edgeFreePixels{ 0U };
 	const unsigned int m_option{ 0U };
 	const float m_dt{ 0.0F };
+	float m_zoomFactor{ 1.0F };
 };
 

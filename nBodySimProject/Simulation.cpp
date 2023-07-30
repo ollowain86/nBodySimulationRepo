@@ -15,7 +15,7 @@ Simulation::Simulation(const size_t i_numOfParticles, const float i_scale, const
 
 void Simulation::setUpSelector(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const unsigned int i_option)
 {
-    // random setup with hardcoded seed
+    // globular cluster circular shape - virialized
     if (i_option == 0U)
     {
         setUpSimulation(i_maxXlengthDistr, i_maxYlengthDistr);
@@ -27,6 +27,10 @@ void Simulation::setUpSelector(const unsigned int i_maxXlengthDistr, const unsig
     }
     // hardcoded 3 particle system
     else if (i_option == 2U)
+    {
+
+    }
+    else if (i_option == 3U)
     {
 
     }
@@ -139,32 +143,31 @@ void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const uns
 
     std::random_device rd;
     std::mt19937 gen(123456);
-    double xDistrLengthMax = static_cast<double>(i_maxXlengthDistr);
-    double yDistrLengthMax = static_cast<double>(i_maxYlengthDistr);
-    float secondScale = m_scale / 1.0;
-    std::uniform_real_distribution<double> distr_x(static_cast<double>(m_edgeFreePixels) * secondScale, (xDistrLengthMax - static_cast<double>(m_edgeFreePixels)) * secondScale);
-    std::uniform_real_distribution<double> distr_y(static_cast<double>(m_edgeFreePixels) * secondScale, (yDistrLengthMax - static_cast<double>(m_edgeFreePixels)) * secondScale);
-    std::uniform_real_distribution<double> distrVel_x(-10.0, 10.0F);
-    std::uniform_real_distribution<double> distrVel_y(-10.0, 10.0F);
+    float maxRadius = (static_cast<float>(std::min(i_maxXlengthDistr, i_maxYlengthDistr)) - 2.0F*static_cast<float>(m_edgeFreePixels)) / 2.0F;
+    // set particles around center of visualization -> calculate center
+    float originX = static_cast<float>(i_maxXlengthDistr) / 2.0F;
+    float originY = static_cast<float>(i_maxYlengthDistr) / 2.0F;
+    float tmpRadius{ 0.0F };
+    float tmpAngle{ 0.0F };
+
+    //distribute particle with random radius (0 and maxRadius) and angle 0, 2*pi
+    std::uniform_real_distribution<double> distr_radius(0.0F, maxRadius);
+    std::uniform_real_distribution<double> distr_angle(0.0F, 2.0*M_PI);
+    
     Particle tmpParticle;
     for (size_t i = 0; i < m_numberOfParticles; i++)
     {
-        if (i == 0)
-        {
-            tmpParticle.m_mass = 10.0F;
-        }
-        else
-        {
-            tmpParticle.m_mass = 10.0F;
-        }
-        tmpParticle.m_pos.x = distr_x(gen);
-        tmpParticle.m_pos.y = distr_y(gen);
-        //tmpParticle.m_vel.x = distrVel_x(gen);
-        //tmpParticle.m_vel.y = distrVel_y(gen);
-        tmpParticle.m_vel.x = 0.0;
-        tmpParticle.m_vel.y = 0.0;
-        tmpParticle.m_accel.x = 0.0F;
-        tmpParticle.m_accel.y = 0.0F;
+        tmpParticle.m_mass = 10.0F;
+
+        tmpRadius = distr_radius(gen);
+        tmpAngle = distr_angle(gen);
+
+        tmpParticle.m_pos.x = originX + (tmpRadius * cos(tmpAngle));
+        tmpParticle.m_pos.y = originY + (-1.0F*tmpRadius * sin(tmpAngle));
+
+        tmpParticle.m_pos.x *= m_scale;
+        tmpParticle.m_pos.y *= m_scale;
+
         m_particleContainer.push_back(tmpParticle);
     }
 

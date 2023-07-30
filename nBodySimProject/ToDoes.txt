@@ -6,7 +6,7 @@ What should be done for a correct simulation:
  
  -> DONE
  
-Test if forces are calculated correctly, especially for the plummer radius
+Test if forces are calculated correctly, especially for the plummer radius -> DONE with excel
 Make a window with bars to choose what to simulate
  -> include globular cluster, which should be in a circular shape
  -> make several globular clusters

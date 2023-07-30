@@ -94,6 +94,26 @@ void Visualizer::render()
 					window.close();
 				}
 			}
+			// Check for mouse scroll events
+			if (event.type == sf::Event::MouseWheelScrolled)
+			{
+				if (event.mouseWheelScroll.delta < 0)
+				{
+					m_zoomFactor *= 1.1f; // Increase zoom on scroll up
+				}
+				else if (event.mouseWheelScroll.delta > 0)
+				{
+					m_zoomFactor *= 0.9f; // Decrease zoom on scroll down
+				}
+				else
+				{
+					//do nothing
+				}
+				// Clamp the zoom factor to reasonable values
+				m_zoomFactor = std::max(0.1f, std::min(100.0f, m_zoomFactor));
+				// 
+				//textHandler.setCharacterSize(static_cast<unsigned int>(textHandler.getText().getCharacterSize() * m_zoomFactor));
+			}
 		}
 
 		// CLEAR, DRAW, DISPLAY START
@@ -107,6 +127,11 @@ void Visualizer::render()
 		window.draw(textHandler.getText());
 
 		window.display();
+
+		// Set the view
+		sf::View view = window.getDefaultView();
+		view.zoom(m_zoomFactor);
+		window.setView(view);
 		// CLEAR, DRAW, DISPLAY END
 
 		// Calculate framerate

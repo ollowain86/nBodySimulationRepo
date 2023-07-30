@@ -25,3 +25,15 @@ sf::Text& TextHandler::getText()
 {
     return m_text;
 }
+
+// Setter for position
+void TextHandler::setPosition(const float posX, const float posY)
+{
+    m_text.setPosition(posX, posY);
+}
+
+// Setter for character size
+void TextHandler::setCharacterSize(const unsigned int i_charSize)
+{
+    m_text.setCharacterSize(i_charSize);
+}
