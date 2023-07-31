@@ -17,6 +17,7 @@ public:
 	void setUpSelector(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const unsigned int i_option);
 	void setUpTwoParticle();
 	void setUpThreeParticle();
+	void setUpCircularShape(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const float i_maxRadius);
 	bool floatEqual(const float a, const float b);
 private:
 	//######## METHODS ########

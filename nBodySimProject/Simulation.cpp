@@ -134,16 +134,12 @@ void Simulation::setUpTwoParticle()
     }
 }
 
-// assigns pos, vel and mass to the particles
-void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr)
-{   
-    // Calculate plummer radius = radius of simulation / number of particles
-    // For rectangular shapes (a x b) -> min(a,b) + abs(a-b)/2, e.g. a = 1000, b = 500 -> 500 + 250 = 750
-    m_plummerRadius = (std::min(i_maxXlengthDistr, i_maxYlengthDistr) + std::abs(static_cast<float>(i_maxXlengthDistr - i_maxYlengthDistr)) / 2.0) / m_numberOfParticles;
-
+// this methods sets up the simulation in such a way, that the particles are distributed within a circular shape
+void Simulation::setUpCircularShape(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const float i_maxRadius)
+{
     std::random_device rd;
     std::mt19937 gen(123456);
-    float maxRadius = (static_cast<float>(std::min(i_maxXlengthDistr, i_maxYlengthDistr)) - 2.0F*static_cast<float>(m_edgeFreePixels)) / 2.0F;
+
     // set particles around center of visualization -> calculate center
     float originX = static_cast<float>(i_maxXlengthDistr) / 2.0F;
     float originY = static_cast<float>(i_maxYlengthDistr) / 2.0F;
@@ -151,9 +147,9 @@ void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const uns
     float tmpAngle{ 0.0F };
 
     //distribute particle with random radius (0 and maxRadius) and angle 0, 2*pi
-    std::uniform_real_distribution<double> distr_radius(0.0F, maxRadius);
-    std::uniform_real_distribution<double> distr_angle(0.0F, 2.0*M_PI);
-    
+    std::uniform_real_distribution<double> distr_radius(0.0F, i_maxRadius);
+    std::uniform_real_distribution<double> distr_angle(0.0F, 2.0 * M_PI);
+
     Particle tmpParticle;
     for (size_t i = 0; i < m_numberOfParticles; i++)
     {
@@ -163,13 +159,23 @@ void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const uns
         tmpAngle = distr_angle(gen);
 
         tmpParticle.m_pos.x = originX + (tmpRadius * cos(tmpAngle));
-        tmpParticle.m_pos.y = originY + (-1.0F*tmpRadius * sin(tmpAngle));
+        tmpParticle.m_pos.y = originY + (-1.0F * tmpRadius * sin(tmpAngle));
 
         tmpParticle.m_pos.x *= m_scale;
         tmpParticle.m_pos.y *= m_scale;
 
         m_particleContainer.push_back(tmpParticle);
     }
+}
+
+// assigns pos, vel and mass to the particles
+void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr)
+{   
+    float maxRadius = (static_cast<float>(std::min(i_maxXlengthDistr, i_maxYlengthDistr)) - 2.0F*static_cast<float>(m_edgeFreePixels)) / 2.0F;
+    // Calculate plummer radius = radius of simulation / number of particles
+    m_plummerRadius = maxRadius / m_numberOfParticles;
+
+    setUpCircularShape(i_maxXlengthDistr, i_maxYlengthDistr, maxRadius);
 
     // calc accel initially
     for (size_t i = 0; i < m_particleContainer.size(); i++)
