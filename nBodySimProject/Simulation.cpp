@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <random>
+#include "helperTypesAndFunctions.h"
 
 //ctor
 Simulation::Simulation(const size_t i_numOfParticles, const float i_scale, const float i_gravitationalConstant, const unsigned int i_edgeFreePixels) : m_numberOfParticles(i_numOfParticles), m_scale(i_scale), m_gravitationalConstant(i_gravitationalConstant), m_edgeFreePixels(i_edgeFreePixels)
@@ -182,12 +183,69 @@ float Simulation::massWithinRadiusCalculator(const Particle& i_particle)
         {
             if (otherparticle.m_radius <= i_particle.m_radius)
             {
-                massWithinR_i += otherparticle.m_radius;
+                massWithinR_i += otherparticle.m_mass;
             }
         }
     }
 
     return massWithinR_i;
+}
+
+// calcDistance between two particles
+float Simulation::calcDistance(const Particle& particleA, const Particle& particleB)
+{
+    return std::sqrt(std::pow((particleA.m_pos.x-particleB.m_pos.x),2.0) + std::pow((particleA.m_pos.y - particleB.m_pos.y), 2.0));
+}
+
+float Simulation::calcTotalPotentialEnergy()
+{
+    float U{ 0.0F };
+
+    for (size_t i = 0; i < m_particleContainer.size(); i++)
+    {
+        for (size_t j = i+1; j < m_particleContainer.size(); j++)
+        {
+            U += m_particleContainer[i].m_mass * m_particleContainer[j].m_mass / calcDistance(m_particleContainer[i], m_particleContainer[j]);
+        }
+    }
+    U *= -m_gravitationalConstant;
+    return U;
+}
+
+// calculate length of vec2f
+float Simulation::calcLength(const helpers::vec2f i_2dVec)
+{
+    return std::sqrt(i_2dVec.x* i_2dVec.x + i_2dVec.y* i_2dVec.y);
+}
+
+float Simulation::calcTotalKineticEnergy()
+{
+    float T{ 0.0F };
+
+    for (size_t i = 0; i < m_particleContainer.size(); i++)
+    {
+        T += m_particleContainer[i].m_mass * m_particleContainer[i].m_velScalar * m_particleContainer[i].m_velScalar;
+    }
+    T *= 0.5F;
+    return T;
+}
+
+void Simulation::calcOrbitalSpeed(Particle& particle, const float i_massWithinR_i)
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    if (floatEqual(particle.m_radius, 0.0F))
+    {
+        particle.m_radius += 0.001F;
+    }
+    float velScalar = std::sqrt(m_gravitationalConstant*i_massWithinR_i/ particle.m_radius);
+    std::uniform_real_distribution<double> distr_vel(-velScalar, velScalar);
+
+    particle.m_vel.x = distr_vel(gen);
+    
+    particle.m_vel.y = std::sqrt(velScalar*velScalar - particle.m_vel.x* particle.m_vel.x);
+    
+    particle.m_velScalar = velScalar;
 }
 
 // assigns pos, vel and mass to the particles
@@ -201,11 +259,18 @@ void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const uns
     setUpCircularShape(i_maxXlengthDistr, i_maxYlengthDistr, maxRadius);
 
     float massWithinR_i{ 0.0F };
-    //calculate the mass for particle with mass m_i inside its radius r_i
+    //first calculate the mass for particle with mass m_i inside its radius r_i
+    //second calculate the orbital velocity with the mass
     for (size_t i = 0; i < m_particleContainer.size(); i++)
     {
         //calculates M_i (mass inside r_i)
         massWithinR_i = massWithinRadiusCalculator(m_particleContainer[i]);
+        //calc initial orbital speed
+        if (massWithinR_i == 9990.0F)
+        {
+            calcOrbitalSpeed(m_particleContainer[i], massWithinR_i);
+        }
+        calcOrbitalSpeed(m_particleContainer[i], massWithinR_i);
     }
 
     // calc accel initially
@@ -287,35 +352,13 @@ void Simulation::leapfrogUpdate(const float i_dt)
     {
         p.m_vel.x = p.m_vel_half_dt.x + 0.5f * i_dt * p.m_accel.x;
         p.m_vel.y = p.m_vel_half_dt.y + 0.5f * i_dt * p.m_accel.y;
+        p.m_velScalar = calcLength(p.m_vel);
     }
 }
 
 void Simulation::moveParticles(const float i_dt)
 {
     leapfrogUpdate(i_dt);
-}
-
-void Simulation::calcTotalEnergy()
-{
-    float kinEnergy_i{ 0.0F };
-    float potEnergy_i{ 0.0F };
-    float tmpVelScalarSqd{ 0.0F };
-    float totalEnergy{ 0.0F };
-    float dist{ 0.0F };
-    for (size_t i = 0; i < m_particleContainer.size(); i++)
-    {
-        tmpVelScalarSqd = m_particleContainer[i].m_vel.x * m_particleContainer[i].m_vel.x + m_particleContainer[i].m_vel.y * m_particleContainer[i].m_vel.y;
-        kinEnergy_i = 0.5 * m_particleContainer[i].m_mass * tmpVelScalarSqd;
-        //sum of the pot energy with respect to all other particles
-        for (size_t j = i+1; j < m_particleContainer.size(); j++)
-        {
-            dist = std::sqrt(std::pow((m_particleContainer[i].m_pos.x - m_particleContainer[j].m_pos.x), 2.0) + std::pow((m_particleContainer[i].m_pos.y - m_particleContainer[j].m_pos.y), 2.0));
-            potEnergy_i += -m_particleContainer[i].m_mass * m_particleContainer[j].m_mass / dist;
-        }
-        totalEnergy += kinEnergy_i + potEnergy_i;
-        potEnergy_i = 0.0F;
-    }
-    std::cout << totalEnergy << std::endl;
 }
 
 void Simulation::writeOutData()

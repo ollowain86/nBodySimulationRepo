@@ -6,6 +6,7 @@
 #include "TextHandler.h"
 #include "RectangleHandler.h"
 #include <string>
+#include <iostream>
 
 Visualizer::Visualizer(const size_t i_numberOfParticles, const float i_scale, const float i_gravitationalConstant, const unsigned int i_edgeFreePixels, const unsigned int i_option, const float i_dt) : m_sim(i_numberOfParticles, i_scale, i_gravitationalConstant, i_edgeFreePixels), m_scale(i_scale), m_edgeFreePixels(i_edgeFreePixels), m_option(i_option), m_dt(i_dt)
 {
@@ -146,6 +147,9 @@ void Visualizer::render()
 			frameCount = 0;
 		}
 
+		float T = m_sim.calcTotalKineticEnergy();
+		float U = m_sim.calcTotalPotentialEnergy();
+		std::cout << T << "  " << U << " " << 2*T+U << std::endl;
 		m_sim.moveParticles(m_dt);
 		synchSimAndVisualization();
 		//m_sim.calcTotalEnergy();
