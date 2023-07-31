@@ -28,3 +28,7 @@ Options:
 - Colors and effects (e.g. kinetic energy colors)
 - Different options to simulate (Solar system, global potential for galactic simulation, globular cluster)
 - merges
+
+Beneficial:
+
+plot 'test.txt' using 0:1 with lines title 'Ekin', 'test.txt' using 0:2 with lines title 'Epot', 'test.txt' using 0:3 with lines title 'Etot', 'test.txt' using 0:4 with lines title 'Etot2'

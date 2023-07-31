@@ -205,10 +205,9 @@ float Simulation::calcTotalPotentialEnergy()
     {
         for (size_t j = i+1; j < m_particleContainer.size(); j++)
         {
-            U += m_particleContainer[i].m_mass * m_particleContainer[j].m_mass / calcDistance(m_particleContainer[i], m_particleContainer[j]);
+            U += -m_gravitationalConstant*m_particleContainer[i].m_mass * m_particleContainer[j].m_mass / calcDistance(m_particleContainer[i], m_particleContainer[j]);
         }
     }
-    U *= -m_gravitationalConstant;
     return U;
 }
 
@@ -285,6 +284,29 @@ const std::vector<Particle>& Simulation::getParticleContainer() const
     return m_particleContainer;
 }
 
+float Simulation::calcTotalEnergy()
+{
+    float kinEnergy_i{ 0.0F };
+    float potEnergy_i{ 0.0F };
+    float tmpVelScalarSqd{ 0.0F };
+    float totalEnergy{ 0.0F };
+    float dist{ 0.0F };
+    for (size_t i = 0; i < m_particleContainer.size(); i++)
+    {
+        tmpVelScalarSqd = m_particleContainer[i].m_vel.x * m_particleContainer[i].m_vel.x + m_particleContainer[i].m_vel.y * m_particleContainer[i].m_vel.y;
+        kinEnergy_i = 0.5 * m_particleContainer[i].m_mass * tmpVelScalarSqd;
+        //sum of the pot energy with respect to all other particles
+        for (size_t j = i + 1; j < m_particleContainer.size(); j++)
+        {
+            dist = std::sqrt(std::pow((m_particleContainer[i].m_pos.x - m_particleContainer[j].m_pos.x), 2.0) + std::pow((m_particleContainer[i].m_pos.y - m_particleContainer[j].m_pos.y), 2.0));
+            potEnergy_i += -m_particleContainer[i].m_mass * m_particleContainer[j].m_mass / dist;
+        }
+        totalEnergy += kinEnergy_i + potEnergy_i;
+        potEnergy_i = 0.0F;
+    }
+    return totalEnergy;
+}
+
 void Simulation::calculateAcceleration(Particle& particle)
 {
     for (const Particle& otherParticle : m_particleContainer)
@@ -325,8 +347,6 @@ void Simulation::leapfrogUpdate(const float i_dt)
     {
         p.m_vel_half_dt.x = p.m_vel.x + 0.5f * i_dt * p.m_accel.x;
         p.m_vel_half_dt.y = p.m_vel.y + 0.5f * i_dt * p.m_accel.y;
-        p.m_vel_half_dt.x *= 1.0F;
-        p.m_vel_half_dt.y *= 1.0F;
     }
 
     // Update positions
@@ -343,8 +363,6 @@ void Simulation::leapfrogUpdate(const float i_dt)
         p.m_accel.y = 0.0F;
         // Calculate new acceleration based on updated positions
         calculateAcceleration(p);
-        p.m_accel.x *= 1.0F;
-        p.m_accel.y *= 1.0F;
     }
 
     // Update full-step velocities
@@ -363,19 +381,13 @@ void Simulation::moveParticles(const float i_dt)
 
 void Simulation::writeOutData()
 {
+    float T{ 0.0F };
+    float U{ 0.0F };
+    float E_tot{ 0.0F };
     std::ofstream outFile("test.txt", std::ios::app);
-    for (size_t i = 0; i < m_particleContainer.size(); i++)
-    {
-        outFile << m_particleContainer[i].m_pos.x << " " << m_particleContainer[i].m_pos.y << " " << std::sqrt((m_particleContainer[i].m_vel.x * m_particleContainer[i].m_vel.x) + (m_particleContainer[1].m_vel.y * m_particleContainer[1].m_vel.y)) << " " << std::sqrt((m_particleContainer[i].m_accel.x * m_particleContainer[i].m_accel.x) + (m_particleContainer[i].m_accel.y * m_particleContainer[i].m_accel.y));
-        if (i == m_particleContainer.size() - 1)
-        {
-            outFile << "\n"; // Add a new line after every 4 particles or at the end of the loop
-        }
-        else
-        {
-            outFile << " "; // Add a space between each particle's data
-        }
-    }
-    std::cout << std::endl;
+    T = calcTotalKineticEnergy();
+    U = calcTotalPotentialEnergy();
+    E_tot = calcTotalEnergy();
+    outFile << T << " " << U << " " << T + U << " " << E_tot << std::endl;
     outFile.close();
 }

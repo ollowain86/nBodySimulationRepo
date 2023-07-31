@@ -16,6 +16,7 @@ public:
 	// i_option: 0U = normal, 1U predefined 2 particle system, 2U predefined 3 particle system
 	void setUpSelector(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const unsigned int i_option);
 	void setUpTwoParticle();
+	float calcTotalEnergy();
 	void setUpThreeParticle();
 	bool floatEqual(const float a, const float b);
 	// calculate total potential Energy

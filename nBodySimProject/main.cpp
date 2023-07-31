@@ -15,7 +15,7 @@ int main()
     //TestinClass tester;
     //tester.runTests();
 
-    Visualizer visualizer(numOfParticles, scale, gravitationConstant, edgeFreePixels, 0U, 1.0F);
+    Visualizer visualizer(numOfParticles, scale, gravitationConstant, edgeFreePixels, 1U, 1.0F);
     visualizer.render();
 
     return 0;

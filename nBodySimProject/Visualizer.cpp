@@ -147,12 +147,8 @@ void Visualizer::render()
 			frameCount = 0;
 		}
 
-		float T = m_sim.calcTotalKineticEnergy();
-		float U = m_sim.calcTotalPotentialEnergy();
-		std::cout << T << "  " << U << " " << 2*T+U << std::endl;
 		m_sim.moveParticles(m_dt);
 		synchSimAndVisualization();
-		//m_sim.calcTotalEnergy();
-		//m_sim.writeOutData();
+		m_sim.writeOutData();
 	}
 }
