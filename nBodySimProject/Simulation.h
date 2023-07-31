@@ -17,13 +17,15 @@ public:
 	void setUpSelector(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const unsigned int i_option);
 	void setUpTwoParticle();
 	void setUpThreeParticle();
-	void setUpCircularShape(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const float i_maxRadius);
 	bool floatEqual(const float a, const float b);
 private:
 	//######## METHODS ########
 	void leapfrogUpdate(const float i_dt);
 	void calculateAcceleration(Particle& particle);
-	void calculatePlummerRadius();
+	//calculates M_i (mass inside r_i)
+	float massWithinRadiusCalculator(const Particle& particle);
+	// particles positions are set randomly into a circular shape with their radius (no vel, no accel assigned here), but m_particleContainer gets its initial size
+	void setUpCircularShape(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const float i_maxRadius);
 	// assigns pos, vel and mass to the particles
 	void setUpSimulation(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr);
 	//######## PARAMETERS ########

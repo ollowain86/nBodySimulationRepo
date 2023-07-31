@@ -8,6 +8,7 @@ public:
 	helpers::vec2f m_vel_half_dt{ 0.0F, 0.0F };
 	helpers::vec2f m_accel{0.0F, 0.0F};
 	float m_mass;
+	float m_radius{ 0.0F };
 private:
 	
 };

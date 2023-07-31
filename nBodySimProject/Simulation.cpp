@@ -134,7 +134,7 @@ void Simulation::setUpTwoParticle()
     }
 }
 
-// this methods sets up the simulation in such a way, that the particles are distributed within a circular shape
+// particles positions are set randomly into a circular shape with their radius (no vel, no accel assigned here), but m_particleContainer gets its initial size
 void Simulation::setUpCircularShape(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const float i_maxRadius)
 {
     std::random_device rd;
@@ -158,6 +158,7 @@ void Simulation::setUpCircularShape(const unsigned int i_maxXlengthDistr, const 
         tmpRadius = distr_radius(gen);
         tmpAngle = distr_angle(gen);
 
+        tmpParticle.m_radius = tmpRadius;
         tmpParticle.m_pos.x = originX + (tmpRadius * cos(tmpAngle));
         tmpParticle.m_pos.y = originY + (-1.0F * tmpRadius * sin(tmpAngle));
 
@@ -168,6 +169,27 @@ void Simulation::setUpCircularShape(const unsigned int i_maxXlengthDistr, const 
     }
 }
 
+//calculates M_i (mass inside r_i)
+float Simulation::massWithinRadiusCalculator(const Particle& i_particle)
+{
+    float xPos{ 0.0F };
+    float yPos{ 0.0F };
+    float massWithinR_i{ 0.0F };
+
+    for (const Particle& otherparticle : m_particleContainer)
+    {
+        if (&otherparticle != &i_particle)
+        {
+            if (otherparticle.m_radius <= i_particle.m_radius)
+            {
+                massWithinR_i += otherparticle.m_radius;
+            }
+        }
+    }
+
+    return massWithinR_i;
+}
+
 // assigns pos, vel and mass to the particles
 void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr)
 {   
@@ -175,7 +197,16 @@ void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const uns
     // Calculate plummer radius = radius of simulation / number of particles
     m_plummerRadius = maxRadius / m_numberOfParticles;
 
+    // particles positions are set randomly into a circular shape with their radius (no vel, no accel assigned here), but m_particleContainer gets its initial size
     setUpCircularShape(i_maxXlengthDistr, i_maxYlengthDistr, maxRadius);
+
+    float massWithinR_i{ 0.0F };
+    //calculate the mass for particle with mass m_i inside its radius r_i
+    for (size_t i = 0; i < m_particleContainer.size(); i++)
+    {
+        //calculates M_i (mass inside r_i)
+        massWithinR_i = massWithinRadiusCalculator(m_particleContainer[i]);
+    }
 
     // calc accel initially
     for (size_t i = 0; i < m_particleContainer.size(); i++)
