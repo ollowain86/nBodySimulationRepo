@@ -5,7 +5,7 @@ TextHandler::TextHandler()
 {
 }
 
-void TextHandler::setText(const sf::Font& i_font, const std::string& i_string, const unsigned int i_charSize, const sf::Color& i_fillColor, const sf::Color& i_outLineColor, const float i_outLineThickness, const float posX, const float posY)
+void TextHandler::setText(const sf::Font& i_font, const std::string& i_string, const unsigned int i_charSize, const sf::Color& i_fillColor, const sf::Color& i_outLineColor, const double i_outLineThickness, const double posX, const double posY)
 {
     m_text.setFont(i_font);
     m_text.setString(i_string);
@@ -27,7 +27,7 @@ sf::Text& TextHandler::getText()
 }
 
 // Setter for position
-void TextHandler::setPosition(const float posX, const float posY)
+void TextHandler::setPosition(const double posX, const double posY)
 {
     m_text.setPosition(posX, posY);
 }

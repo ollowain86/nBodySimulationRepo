@@ -2,7 +2,7 @@
 
 namespace helpers
 {
-	struct vec2f
+	struct vec2d_double
 	{
 		float x;
 		float y;

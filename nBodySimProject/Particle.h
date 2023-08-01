@@ -3,14 +3,14 @@
 class Particle
 {
 public:
-	helpers::vec2f m_pos{ 0.0F, 0.0F };
-	helpers::vec2f m_vel{ 0.0F, 0.0F };
-	helpers::vec2f m_vel_half_dt{ 0.0F, 0.0F };
-	helpers::vec2f m_accel{0.0F, 0.0F};
-	float m_mass;
-	float m_velScalar;
+	helpers::vec2d_double m_pos{ 0.0, 0.0 };
+	helpers::vec2d_double m_vel{ 0.0, 0.0 };
+	helpers::vec2d_double m_vel_half_dt{ 0.0, 0.0 };
+	helpers::vec2d_double m_accel{0.0, 0.0};
+	double m_mass;
+	double m_velScalar;
 	// radius around the chosen origin
-	float m_radius{ 0.0F };
+	double m_radius{ 0.0 };
 private:
 	
 };

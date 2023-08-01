@@ -8,7 +8,7 @@
 #include <string>
 #include <iostream>
 
-Visualizer::Visualizer(const size_t i_numberOfParticles, const float i_scale, const float i_gravitationalConstant, const unsigned int i_edgeFreePixels, const unsigned int i_option, const float i_dt) : m_sim(i_numberOfParticles, i_scale, i_gravitationalConstant, i_edgeFreePixels), m_scale(i_scale), m_edgeFreePixels(i_edgeFreePixels), m_option(i_option), m_dt(i_dt)
+Visualizer::Visualizer(const size_t i_numberOfParticles, const double i_scale, const double i_gravitationalConstant, const unsigned int i_edgeFreePixels, const unsigned int i_option, const double i_dt) : m_sim(i_numberOfParticles, i_scale, i_gravitationalConstant, i_edgeFreePixels), m_scale(i_scale), m_edgeFreePixels(i_edgeFreePixels), m_option(i_option), m_dt(i_dt)
 {
 	//creates particle container with i_numberOfParticles, each particle has pos, vel and mass
 	m_sim.setUpSelector(m_desktopMode.width, m_desktopMode.height, m_option);
@@ -25,11 +25,11 @@ void Visualizer::setUpCircleContainer()
 	{
 		tmpParticle = m_sim.getParticleContainer().at(i);
 
-		m_tmpCircle.setRadius(5.0F);
+		m_tmpCircle.setRadius(5.0);
 		m_tmpCircle.setPosition((tmpParticle.m_pos.x - m_tmpCircle.getRadius()/m_scale), (tmpParticle.m_pos.y - m_tmpCircle.getRadius() / m_scale));
 		m_tmpCircle.setFillColor(sf::Color::White);
 		m_tmpCircle.setOutlineColor(sf::Color::Blue);
-		m_tmpCircle.setOutlineThickness(2.0F);
+		m_tmpCircle.setOutlineThickness(2.0);
 
 		m_circleContainer.push_back(m_tmpCircle);
 	}
@@ -64,9 +64,9 @@ void Visualizer::render()
 	unsigned int tmpCharSize = 20U;
 	sf::Color tmpFillColor = sf::Color::White;
 	sf::Color tmpOutlineColor = sf::Color::White;
-	float tmpOutlineThickness = 0.0F;
-	float tmpPosX = 0.0F;
-	float tmpPosY = 0.0F;
+	double tmpOutlineThickness = 0.0;
+	double tmpPosX = 0.0;
+	double tmpPosY = 0.0;
 	TextHandler textHandler;
 	textHandler.setText(font, tmpString, tmpCharSize, tmpFillColor, tmpOutlineColor, tmpOutlineThickness, tmpPosX, tmpPosY);
 
@@ -74,9 +74,9 @@ void Visualizer::render()
 	sf::Clock clock;
 	sf::Time elapsed = sf::Time::Zero;
 	unsigned int frameCount = 0;
-	const sf::Time updateRate = sf::seconds(1.0f); // Update the FPS text every second
+	const sf::Time updateRate = sf::seconds(1.0); // Update the FPS text every second
 
-	window.setFramerateLimit(60);
+	//window.setFramerateLimit(60);
 
 	// THE SFML WHILE LOOPs
 	while (window.isOpen()) {
@@ -100,18 +100,18 @@ void Visualizer::render()
 			{
 				if (event.mouseWheelScroll.delta < 0)
 				{
-					m_zoomFactor *= 1.1f; // Increase zoom on scroll up
+					m_zoomFactor *= 1.1; // Increase zoom on scroll up
 				}
 				else if (event.mouseWheelScroll.delta > 0)
 				{
-					m_zoomFactor *= 0.9f; // Decrease zoom on scroll down
+					m_zoomFactor *= 0.9; // Decrease zoom on scroll down
 				}
 				else
 				{
 					//do nothing
 				}
 				// Clamp the zoom factor to reasonable values
-				m_zoomFactor = std::max(0.1f, std::min(100.0f, m_zoomFactor));
+				m_zoomFactor = std::max(0.1, std::min(100.0, m_zoomFactor));
 				// 
 				//textHandler.setCharacterSize(static_cast<unsigned int>(textHandler.getText().getCharacterSize() * m_zoomFactor));
 			}
@@ -140,7 +140,7 @@ void Visualizer::render()
 		frameCount++;
 		if (elapsed >= updateRate)
 		{
-			float fps = static_cast<float>(frameCount) / elapsed.asSeconds();
+			double fps = static_cast<double>(frameCount) / elapsed.asSeconds();
 			textHandler.setString("FPS: " + std::to_string(static_cast<int>(fps)));
 
 			elapsed = sf::Time::Zero;
