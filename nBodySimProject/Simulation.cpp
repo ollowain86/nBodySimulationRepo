@@ -284,29 +284,6 @@ const std::vector<Particle>& Simulation::getParticleContainer() const
     return m_particleContainer;
 }
 
-double Simulation::calcTotalEnergy()
-{
-    double kinEnergy_i{ 0.0 };
-    double potEnergy_i{ 0.0 };
-    double tmpVelScalarSqd{ 0.0 };
-    double totalEnergy{ 0.0 };
-    double dist{ 0.0 };
-    for (size_t i = 0; i < m_particleContainer.size(); i++)
-    {
-        tmpVelScalarSqd = m_particleContainer[i].m_vel.x * m_particleContainer[i].m_vel.x + m_particleContainer[i].m_vel.y * m_particleContainer[i].m_vel.y;
-        kinEnergy_i = 0.5 * m_particleContainer[i].m_mass * tmpVelScalarSqd;
-        //sum of the pot energy with respect to all other particles
-        for (size_t j = i + 1; j < m_particleContainer.size(); j++)
-        {
-            dist = std::sqrt(std::pow((m_particleContainer[i].m_pos.x - m_particleContainer[j].m_pos.x), 2.0) + std::pow((m_particleContainer[i].m_pos.y - m_particleContainer[j].m_pos.y), 2.0));
-            potEnergy_i += -m_particleContainer[i].m_mass * m_particleContainer[j].m_mass / dist;
-        }
-        totalEnergy += kinEnergy_i + potEnergy_i;
-        potEnergy_i = 0.0;
-    }
-    return totalEnergy;
-}
-
 void Simulation::calculateAcceleration(Particle& particle)
 {
     for (const Particle& otherParticle : m_particleContainer)
@@ -385,7 +362,6 @@ void Simulation::writeOutData()
     std::ofstream outFile("test.txt", std::ios::app);
     T = calcTotalKineticEnergy();
     U = calcTotalPotentialEnergy();
-    E_tot = calcTotalEnergy();
     outFile << T << " " << U << " " << T + U << " " << E_tot << std::endl;
     outFile.close();
 }

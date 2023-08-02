@@ -10,7 +10,7 @@ int main()
     const double scale = 1.0;
     const double gravitationConstant = 1.0;
     const unsigned int edgeFreePixels = 100U; //number of pixel to the edges of the monitor where no particle should be at start
-    const unsigned int simOption = 1U; //0U random globular cluster, 1U two particle predefined test
+    const unsigned int simOption = 1U; //0U random globular cluster, 1U two particle predefined test, 2U a milky way like structure
 
     //TestinClass tester;
     //tester.runTests();
