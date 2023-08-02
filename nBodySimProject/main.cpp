@@ -6,7 +6,7 @@
 int main()
 {
     //number of particles
-    const size_t numOfParticles{ 1000U };
+    const size_t numOfParticles{ 500U };
     const double scale = 1.0;
     const double gravitationConstant = 1.0;
     const unsigned int edgeFreePixels = 100U; //number of pixel to the edges of the monitor where no particle should be at start

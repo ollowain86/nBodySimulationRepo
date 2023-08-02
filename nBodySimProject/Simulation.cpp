@@ -320,7 +320,7 @@ void Simulation::calculateAcceleration(Particle& particle)
             m_distanceSqrd = m_distance * m_distance;
 
             // Calculate the gravitational force magnitude
-            if (m_distance < -1.0*m_plummerRadius)
+            if (m_distance < 2.0*m_plummerRadius)
             {
                 m_accelMagnitude = m_gravitationalConstant * otherParticle.m_mass * (64.0 * m_distance * std::pow(m_plummerRadius, 3.0)) / std::pow((m_distanceSqrd + 4.0 * m_plummerRadius * m_plummerRadius), 3.0);
             }
@@ -342,23 +342,13 @@ void Simulation::calculateAcceleration(Particle& particle)
 
 void Simulation::leapfrogUpdate(const double i_dt)
 {
-    // Update half-step velocities
+    // calc r_(i+1/2)
     for (Particle& p : m_particleContainer)
     {
-        // calc v_(1/2)
-        p.m_vel_half_dt.x = p.m_vel.x + 0.5f * i_dt * p.m_accel.x;
-        p.m_vel_half_dt.y = p.m_vel.y + 0.5f * i_dt * p.m_accel.y;
+        p.m_pos.x = p.m_pos.x + p.m_vel.x * 0.5 * i_dt;
+        p.m_pos.y = p.m_pos.y + p.m_vel.y * 0.5 * i_dt;
     }
-
-    // Update positions
-    for (Particle& p : m_particleContainer)
-    {
-        // update pos with v_(1/2)
-        p.m_pos.x += i_dt * p.m_vel_half_dt.x;
-        p.m_pos.y += i_dt * p.m_vel_half_dt.y;
-    }
-
-    // Calculate new accelerations O(N^2)
+    // calc a_(i+1/2)
     for (Particle& p : m_particleContainer)
     {
         // Calculate new acceleration based on updated positions
@@ -366,15 +356,19 @@ void Simulation::leapfrogUpdate(const double i_dt)
         p.m_accel.y = 0.0;
         calculateAcceleration(p);
     }
-
-    // Update full-step velocities
+    // calc v_(i+1) with a_(i+1/2)
     for (Particle& p : m_particleContainer)
     {
-        // update vel
-        p.m_vel.x = p.m_vel_half_dt.x + 0.5f * i_dt * p.m_accel.x;
-        p.m_vel.y = p.m_vel_half_dt.y + 0.5f * i_dt * p.m_accel.y;
-        //assign updated vel scalar
+        p.m_vel.x = p.m_vel.x + p.m_accel.x * i_dt;
+        p.m_vel.y = p.m_vel.y + p.m_accel.y * i_dt;
         p.m_velScalar = calcLength(p.m_vel);
+    }
+
+    // calc r_(i+1) with v_(i+1)
+    for (Particle& p : m_particleContainer)
+    {
+        p.m_pos.x = p.m_pos.x + p.m_vel.x * 0.5 * i_dt;
+        p.m_pos.y = p.m_pos.y + p.m_vel.y * 0.5 * i_dt;
     }
 }
 

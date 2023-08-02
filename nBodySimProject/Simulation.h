@@ -17,14 +17,13 @@ public:
 	void setUpSelector(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const unsigned int i_option);
 	void setUpTwoParticle();
 	double calcTotalEnergy();
-	void setUpThreeParticle();
-	bool doubleEqual(const double a, const double b);
 	// calculate total potential Energy
 	double calcTotalPotentialEnergy();
 	// calculate total kinetic Energy
 	double calcTotalKineticEnergy();
 private:
 	//######## METHODS ########
+	bool doubleEqual(const double a, const double b);
 	void leapfrogUpdate(const double i_dt);
 	void calculateAcceleration(Particle& particle);
 	//calculates orbital velocity with v_c = sqrt(G*M/r);
