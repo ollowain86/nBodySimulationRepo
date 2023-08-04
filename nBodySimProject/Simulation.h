@@ -6,7 +6,7 @@
 class Simulation
 {
 public:
-	Simulation(const size_t i_numOfParticles, const double i_scale, const double i_gravitationalConstant, const unsigned int i_edgeFreePixels);
+	Simulation(const size_t i_numOfParticles, const double i_scale, const double i_gravitationalConstant, const unsigned int i_edgeFreePixels, const unsigned int i_option);
 	//return the m_particleContainer
 	const std::vector<Particle>& getParticleContainer() const;
 	//moves the particles for dt
@@ -14,8 +14,7 @@ public:
 	void writeOutData();
 	// TESTING AND DEBUGGING
 	// i_option: 0U = normal, 1U predefined 2 particle system, 2U predefined 3 particle system
-	void setUpSelector(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const unsigned int i_option);
-	void setUpTwoParticle();
+	void setUpSelector(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr);
 	// calculate total potential Energy
 	double calcTotalPotentialEnergy();
 	// calculate total kinetic Energy
@@ -34,9 +33,12 @@ private:
 	//calculates M_i (mass inside r_i)
 	double massWithinRadiusCalculator(const Particle& particle);
 	// particles positions are set randomly into a circular shape with their radius (no vel, no accel assigned here), but m_particleContainer gets its initial size
-	void setUpCircularShape(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const double i_maxRadius);
+	void setUpCircularShape(const double i_maxRadius);
 	// assigns pos, vel and mass to the particles
-	void setUpSimulation(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr);
+	void setUpSimulation();
+	void setUpTwoParticle();
+	void setUpMilkyWayStyle(const double i_centralMass);
+	void calculateAccelerationMilkyWayStyle(Particle& particle);
 	//######## PARAMETERS ########
 	// number of Particles in the Sim
 	const size_t m_numberOfParticles{ 0U };
@@ -53,7 +55,11 @@ private:
 	double m_accelMagnitude{ 0.0 };
 	double m_accelerationX{ 0.0 };
 	double m_accelerationY{ 0.0 };
+	unsigned int m_maxXlengthDistr{ 0U };
+	unsigned int m_maxYlengthDistr{ 0U };
 	//important for visualizing and particle distribution
 	const unsigned int m_edgeFreePixels{ 0U };
+	const unsigned int m_option{ 0U };
+	double m_centralMass{ 0.0 };
 };
 

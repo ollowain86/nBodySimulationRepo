@@ -8,10 +8,10 @@
 #include <string>
 #include <iostream>
 
-Visualizer::Visualizer(const size_t i_numberOfParticles, const double i_scale, const double i_gravitationalConstant, const unsigned int i_edgeFreePixels, const unsigned int i_option, const double i_dt) : m_sim(i_numberOfParticles, i_scale, i_gravitationalConstant, i_edgeFreePixels), m_scale(i_scale), m_edgeFreePixels(i_edgeFreePixels), m_option(i_option), m_dt(i_dt)
+Visualizer::Visualizer(const size_t i_numberOfParticles, const double i_scale, const double i_gravitationalConstant, const unsigned int i_edgeFreePixels, const unsigned int i_option, const double i_dt) : m_sim(i_numberOfParticles, i_scale, i_gravitationalConstant, i_edgeFreePixels, i_option), m_scale(i_scale), m_edgeFreePixels(i_edgeFreePixels), m_option(i_option), m_dt(i_dt)
 {
 	//creates particle container with i_numberOfParticles, each particle has pos, vel and mass
-	m_sim.setUpSelector(m_desktopMode.width, m_desktopMode.height, m_option);
+	m_sim.setUpSelector(m_desktopMode.width, m_desktopMode.height);
 	// takes the particle from the simulation and fills the m_circleContainer
 	setUpCircleContainer();
 }
@@ -76,7 +76,7 @@ void Visualizer::render()
 	unsigned int frameCount = 0;
 	const sf::Time updateRate = sf::seconds(1.0); // Update the FPS text every second
 
-	//window.setFramerateLimit(60);
+	window.setFramerateLimit(1);
 
 	// THE SFML WHILE LOOPs
 	while (window.isOpen()) {

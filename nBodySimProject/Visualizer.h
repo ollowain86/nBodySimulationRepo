@@ -20,6 +20,6 @@ private:
 	const unsigned int m_edgeFreePixels{ 0U };
 	const unsigned int m_option{ 0U };
 	const double m_dt{ 0.0 };
-	double m_zoomFactor{ 1.0 };
+	double m_zoomFactor{ 1.0 }; //for visual zoom
 };
 

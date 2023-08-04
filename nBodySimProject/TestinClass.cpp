@@ -13,8 +13,8 @@ void TestinClass::runTests()
 
 void TestinClass::test1()
 {
-	//scale, gravitationalConstant, edgeFreePixels
-	Simulation m_sim(2U, 1.0F, 1.0F, 0U);
+	//´num of particles, scale, gravitationalConstant, edgeFreePixels, option
+	Simulation m_sim(2U, 1.0, 1.0, 0U, 1U);
 	//maxXlengthDistr, maxYlengthDistr -> does not matter random values
-	m_sim.setUpSelector(0U, 0U, 1U);
+	m_sim.setUpSelector(0U, 0U);
 }

@@ -9,29 +9,31 @@
 #include "helperTypesAndFunctions.h"
 
 //ctor
-Simulation::Simulation(const size_t i_numOfParticles, const double i_scale, const double i_gravitationalConstant, const unsigned int i_edgeFreePixels) : m_numberOfParticles(i_numOfParticles), m_scale(i_scale), m_gravitationalConstant(i_gravitationalConstant), m_edgeFreePixels(i_edgeFreePixels)
+Simulation::Simulation(const size_t i_numOfParticles, const double i_scale, const double i_gravitationalConstant, const unsigned int i_edgeFreePixels, const unsigned int i_option) : m_numberOfParticles(i_numOfParticles), m_scale(i_scale), m_gravitationalConstant(i_gravitationalConstant), m_edgeFreePixels(i_edgeFreePixels), m_option(i_option)
 {
 
 }
 
-void Simulation::setUpSelector(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const unsigned int i_option)
+void Simulation::setUpSelector(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr)
 {
+    m_maxXlengthDistr = i_maxXlengthDistr;
+    m_maxYlengthDistr = i_maxYlengthDistr;
     // globular cluster circular shape - virialized
-    if (i_option == 0U)
+    if (m_option == 0U)
     {
-        setUpSimulation(i_maxXlengthDistr, i_maxYlengthDistr);
+        setUpSimulation();
     }
     // hardcoded 2 particle system
-    else if(i_option == 1U)
+    else if(m_option == 1U)
     {
         setUpTwoParticle();
     }
-    // hardcoded 3 particle system
-    else if (i_option == 2U)
+    // milky way style
+    else if (m_option == 2U)
     {
-
+        setUpMilkyWayStyle(1.0e5);
     }
-    else if (i_option == 3U)
+    else if (m_option == 3U)
     {
 
     }
@@ -136,14 +138,14 @@ void Simulation::setUpTwoParticle()
 }
 
 // particles positions are set randomly into a circular shape with their radius (no vel, no accel assigned here), but m_particleContainer gets its initial size
-void Simulation::setUpCircularShape(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr, const double i_maxRadius)
+void Simulation::setUpCircularShape(const double i_maxRadius)
 {
     std::random_device rd;
     std::mt19937 gen(123456);
 
     // set particles around center of visualization -> calculate center
-    double originX = static_cast<double>(i_maxXlengthDistr) / 2.0;
-    double originY = static_cast<double>(i_maxYlengthDistr) / 2.0;
+    double originX = static_cast<double>(m_maxXlengthDistr) / 2.0;
+    double originY = static_cast<double>(m_maxYlengthDistr) / 2.0;
     double tmpRadius{ 0.0 };
     double tmpAngle{ 0.0 };
 
@@ -231,31 +233,63 @@ double Simulation::calcTotalKineticEnergy()
 
 void Simulation::calcOrbitalSpeed(Particle& particle, const double i_massWithinR_i)
 {
-    std::random_device rd;
-    std::mt19937 gen(rd());
     if (doubleEqual(particle.m_radius, 0.0))
     {
         particle.m_radius += 0.001F;
     }
     double velScalar = std::sqrt(m_gravitationalConstant*i_massWithinR_i/ particle.m_radius);
-    std::uniform_real_distribution<double> distr_vel(-velScalar, velScalar);
-
-    particle.m_vel.x = distr_vel(gen);
-    
-    particle.m_vel.y = std::sqrt(velScalar*velScalar - particle.m_vel.x* particle.m_vel.x);
-    
     particle.m_velScalar = velScalar;
+
+    double originX = static_cast<double>(m_maxXlengthDistr) / 2.0 * m_scale;
+    double originY = static_cast<double>(m_maxYlengthDistr) / 2.0 * m_scale;
+
+    double angleOffset{ 0.0 };
+
+    double deltaX = particle.m_pos.x - originX;
+    double deltaY = particle.m_pos.y - originY;
+
+    /*
+    if (deltaX >= 0.0 && deltaY <= 0.0)
+    {
+        angleOffset = 0;
+    }
+    else if(deltaX < 0.0 && deltaY < 0.0)
+    {
+        angleOffset = M_PI/2.0;
+    }
+    else if (deltaX < 0.0 && deltaY > 0.0)
+    {
+        angleOffset = M_PI;
+    }
+    else if (deltaX > 0.0 && deltaY > 0.0)
+    {
+        angleOffset = 1.5*M_PI;
+    }
+    else
+    {
+        std::cout << "Strange angle was calculated, check <=, <, >" << std::endl;
+    }
+    */
+
+    double distance = std::sqrt(deltaX*deltaX + deltaY*deltaY);
+
+    double alpha = std::atan2(deltaY, deltaX);
+    alpha += angleOffset;
+
+    particle.m_vel.x = particle.m_velScalar * (-1.0*std::sin(alpha));
+    particle.m_vel.y = particle.m_velScalar * (-1.0 * std::cos(alpha));
 }
 
-// assigns pos, vel and mass to the particles
-void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const unsigned int i_maxYlengthDistr)
-{   
-    double maxRadius = (static_cast<double>(std::min(i_maxXlengthDistr, i_maxYlengthDistr)) - 2.0*static_cast<double>(m_edgeFreePixels)) / 2.0;
+//
+void Simulation::setUpMilkyWayStyle(const double i_centralMass)
+{
+    m_centralMass = i_centralMass;
+    double maxRadius = (static_cast<double>(std::min(m_maxXlengthDistr, m_maxYlengthDistr)) - 2.0 * static_cast<double>(m_edgeFreePixels)) / 2.0;
     // Calculate plummer radius = radius of simulation / number of particles
-    m_plummerRadius = maxRadius / m_numberOfParticles;
+    m_plummerRadius = maxRadius*m_scale / m_numberOfParticles;
 
     // particles positions are set randomly into a circular shape with their radius (no vel, no accel assigned here), but m_particleContainer gets its initial size
-    setUpCircularShape(i_maxXlengthDistr, i_maxYlengthDistr, maxRadius);
+    setUpCircularShape(maxRadius);
 
     double massWithinR_i{ 0.0 };
     //first calculate the mass for particle with mass m_i inside its radius r_i
@@ -264,11 +298,34 @@ void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const uns
     {
         //calculates M_i (mass inside r_i)
         massWithinR_i = massWithinRadiusCalculator(m_particleContainer[i]);
-        //calc initial orbital speed
-        if (massWithinR_i == 9990.0)
-        {
-            calcOrbitalSpeed(m_particleContainer[i], massWithinR_i);
-        }
+        // here comes the centralmass on top
+        calcOrbitalSpeed(m_particleContainer[i], massWithinR_i+m_centralMass);
+    }
+
+    // calc accel initially
+    for (size_t i = 0; i < m_particleContainer.size(); i++)
+    {
+        calculateAccelerationMilkyWayStyle(m_particleContainer[i]);
+    }
+}
+
+// assigns pos, vel and mass to the particles
+void Simulation::setUpSimulation()
+{   
+    double maxRadius = (static_cast<double>(std::min(m_maxXlengthDistr, m_maxYlengthDistr)) - 2.0*static_cast<double>(m_edgeFreePixels)) / 2.0;
+    // Calculate plummer radius = radius of simulation / number of particles
+    m_plummerRadius = maxRadius*m_scale / m_numberOfParticles;
+
+    // particles positions are set randomly into a circular shape with their radius (no vel, no accel assigned here), but m_particleContainer gets its initial size
+    setUpCircularShape(maxRadius);
+
+    double massWithinR_i{ 0.0 };
+    //first calculate the mass for particle with mass m_i inside its radius r_i
+    //second calculate the orbital velocity with the mass
+    for (size_t i = 0; i < m_particleContainer.size(); i++)
+    {
+        //calculates M_i (mass inside r_i)
+        massWithinR_i = massWithinRadiusCalculator(m_particleContainer[i]);
         calcOrbitalSpeed(m_particleContainer[i], massWithinR_i);
     }
 
@@ -282,6 +339,63 @@ void Simulation::setUpSimulation(const unsigned int i_maxXlengthDistr, const uns
 const std::vector<Particle>& Simulation::getParticleContainer() const
 {
     return m_particleContainer;
+}
+
+void Simulation::calculateAccelerationMilkyWayStyle(Particle& particle)
+{
+    for (const Particle& otherParticle : m_particleContainer)
+    {
+        if (&particle != &otherParticle)  // Ensure not calculating for the same particle
+        {
+            // Calculate distance between the two particles
+            m_deltaX = otherParticle.m_pos.x - particle.m_pos.x;
+            m_deltaY = otherParticle.m_pos.y - particle.m_pos.y;
+            m_distance = std::sqrt(m_deltaX * m_deltaX + m_deltaY * m_deltaY);
+            m_distanceSqrd = m_distance * m_distance;
+
+            // Calculate the gravitational force magnitude
+            if (m_distance < 2.0 * m_plummerRadius)
+            {
+                m_accelMagnitude = m_gravitationalConstant * otherParticle.m_mass * (64.0 * m_distance * std::pow(m_plummerRadius, 3.0)) / std::pow((m_distanceSqrd + 4.0 * m_plummerRadius * m_plummerRadius), 3.0);
+            }
+            else
+            {
+                m_accelMagnitude = m_gravitationalConstant * otherParticle.m_mass / m_distanceSqrd;
+            }
+
+            // Calculate the components of the gravitational acceleration
+            m_accelerationX = m_accelMagnitude * (m_deltaX / m_distance);
+            m_accelerationY = m_accelMagnitude * (m_deltaY / m_distance);
+
+            // Add the components to the particle's acceleration
+            particle.m_accel.x += m_accelerationX;
+            particle.m_accel.y += m_accelerationY;
+        }
+    }
+    // add here the accel due to center mass
+    double originX = static_cast<double>(m_maxXlengthDistr) / 2.0 * m_scale;
+    double originY = static_cast<double>(m_maxYlengthDistr) / 2.0 * m_scale;
+    // Calculate distance between particle and origin
+    m_deltaX = originX - particle.m_pos.x;
+    m_deltaY = originY - particle.m_pos.y;
+    m_distance = std::sqrt(m_deltaX * m_deltaX + m_deltaY * m_deltaY);
+    m_distanceSqrd = m_distance * m_distance;
+    // Calculate the gravitational force magnitude
+    if (m_distance < 2.0 * m_plummerRadius)
+    {
+        m_accelMagnitude = m_gravitationalConstant * m_centralMass * (64.0 * m_distance * std::pow(m_plummerRadius, 3.0)) / std::pow((m_distanceSqrd + 4.0 * m_plummerRadius * m_plummerRadius), 3.0);
+    }
+    else
+    {
+        m_accelMagnitude = m_gravitationalConstant * m_centralMass / m_distanceSqrd;
+    }
+    // Calculate the components of the gravitational acceleration
+    m_accelerationX = m_accelMagnitude * (m_deltaX / m_distance);
+    m_accelerationY = m_accelMagnitude * (m_deltaY / m_distance);
+
+    // Add the components to the particle's acceleration
+    particle.m_accel.x += m_accelerationX;
+    particle.m_accel.y += m_accelerationY;
 }
 
 void Simulation::calculateAcceleration(Particle& particle)
@@ -331,13 +445,21 @@ void Simulation::leapfrogUpdate(const double i_dt)
         // Calculate new acceleration based on updated positions
         p.m_accel.x = 0.0;
         p.m_accel.y = 0.0;
-        calculateAcceleration(p);
+        if (m_option == 2U)
+        {
+            calculateAccelerationMilkyWayStyle(p);
+        }
+        else
+        {
+            calculateAcceleration(p);
+        }
     }
     // calc v_(i+1) with a_(i+1/2)
     for (Particle& p : m_particleContainer)
     {
         p.m_vel.x = p.m_vel.x + p.m_accel.x * i_dt;
         p.m_vel.y = p.m_vel.y + p.m_accel.y * i_dt;
+        // calc vel scalar each round
         p.m_velScalar = calcLength(p.m_vel);
     }
 
@@ -358,10 +480,9 @@ void Simulation::writeOutData()
 {
     double T{ 0.0 };
     double U{ 0.0 };
-    double E_tot{ 0.0 };
     std::ofstream outFile("test.txt", std::ios::app);
     T = calcTotalKineticEnergy();
     U = calcTotalPotentialEnergy();
-    outFile << T << " " << U << " " << T + U << " " << E_tot << std::endl;
+    outFile << T << " " << U << " " << T + U  << std::endl;
     outFile.close();
 }
