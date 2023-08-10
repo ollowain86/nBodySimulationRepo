@@ -271,10 +271,11 @@ void Simulation::calcOrbitalSpeed(Particle& particle, const double i_massWithinR
     }
     */
 
-    double distance = std::sqrt(deltaX*deltaX + deltaY*deltaY);
-
-    double alpha = std::atan2(deltaY, deltaX);
-    alpha += angleOffset;
+    double alpha = -std::atan2(deltaY, deltaX);
+    if (alpha <= 0.0)
+    {
+        alpha += 2 * M_PI;
+    }
 
     particle.m_vel.x = particle.m_velScalar * (-1.0*std::sin(alpha));
     particle.m_vel.y = particle.m_velScalar * (-1.0 * std::cos(alpha));
@@ -433,9 +434,12 @@ void Simulation::calculateAcceleration(Particle& particle)
 
 void Simulation::leapfrogUpdate(const double i_dt)
 {
+    double tmpX, tmpY;
     // calc r_(i+1/2)
     for (Particle& p : m_particleContainer)
     {
+        tmpX = p.m_pos.x - 12800;
+        tmpY = p.m_pos.y - 7200;
         p.m_pos.x = p.m_pos.x + p.m_vel.x * 0.5 * i_dt;
         p.m_pos.y = p.m_pos.y + p.m_vel.y * 0.5 * i_dt;
     }
