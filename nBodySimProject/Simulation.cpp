@@ -167,6 +167,7 @@ void Simulation::setUpCircularShape(const double i_maxRadius)
 
         tmpParticle.m_pos.x *= m_scale;
         tmpParticle.m_pos.y *= m_scale;
+        tmpParticle.m_radius *= m_scale;
 
         m_particleContainer.push_back(tmpParticle);
     }
@@ -247,29 +248,6 @@ void Simulation::calcOrbitalSpeed(Particle& particle, const double i_massWithinR
 
     double deltaX = particle.m_pos.x - originX;
     double deltaY = particle.m_pos.y - originY;
-
-    /*
-    if (deltaX >= 0.0 && deltaY <= 0.0)
-    {
-        angleOffset = 0;
-    }
-    else if(deltaX < 0.0 && deltaY < 0.0)
-    {
-        angleOffset = M_PI/2.0;
-    }
-    else if (deltaX < 0.0 && deltaY > 0.0)
-    {
-        angleOffset = M_PI;
-    }
-    else if (deltaX > 0.0 && deltaY > 0.0)
-    {
-        angleOffset = 1.5*M_PI;
-    }
-    else
-    {
-        std::cout << "Strange angle was calculated, check <=, <, >" << std::endl;
-    }
-    */
 
     double alpha = -std::atan2(deltaY, deltaX);
     if (alpha <= 0.0)
@@ -466,7 +444,6 @@ void Simulation::leapfrogUpdate(const double i_dt)
         // calc vel scalar each round
         p.m_velScalar = calcLength(p.m_vel);
     }
-
     // calc r_(i+1) with v_(i+1)
     for (Particle& p : m_particleContainer)
     {

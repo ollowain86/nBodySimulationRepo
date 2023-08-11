@@ -76,7 +76,7 @@ void Visualizer::render()
 	unsigned int frameCount = 0;
 	const sf::Time updateRate = sf::seconds(1.0); // Update the FPS text every second
 
-	window.setFramerateLimit(1);
+	//window.setFramerateLimit(60);
 
 	// THE SFML WHILE LOOPs
 	while (window.isOpen()) {
@@ -149,6 +149,6 @@ void Visualizer::render()
 
 		m_sim.moveParticles(m_dt);
 		synchSimAndVisualization();
-		m_sim.writeOutData();
+		//m_sim.writeOutData();
 	}
 }
