@@ -149,6 +149,6 @@ void Visualizer::render()
 
 		m_sim.moveParticles(m_dt);
 		synchSimAndVisualization();
-		//m_sim.writeOutData();
+		m_sim.writeOutData();
 	}
 }

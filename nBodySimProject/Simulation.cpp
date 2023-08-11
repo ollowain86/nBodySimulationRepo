@@ -63,7 +63,7 @@ void Simulation::setUpTwoParticle()
     {
         if (i == 0)
         {
-            tmpParticle.m_mass = 1000.0;
+            tmpParticle.m_mass = 3600.0;
             tmpParticle.m_pos.x = 500.0;
             tmpParticle.m_pos.y = 500.0;
             tmpParticle.m_vel.x = 0.0;
@@ -74,10 +74,10 @@ void Simulation::setUpTwoParticle()
         else
         {
             tmpParticle.m_mass = 10.0;
-            tmpParticle.m_pos.x = 510.0;
+            tmpParticle.m_pos.x = 600.0;
             tmpParticle.m_pos.y = 500.0;
             tmpParticle.m_vel.x = 0.0;
-            tmpParticle.m_vel.y = 10.0;
+            tmpParticle.m_vel.y = 6.0;
             tmpParticle.m_accel.x = 0.0;
             tmpParticle.m_accel.y = 0.0;
         }
@@ -412,12 +412,9 @@ void Simulation::calculateAcceleration(Particle& particle)
 
 void Simulation::leapfrogUpdate(const double i_dt)
 {
-    double tmpX, tmpY;
     // calc r_(i+1/2)
     for (Particle& p : m_particleContainer)
     {
-        tmpX = p.m_pos.x - 12800;
-        tmpY = p.m_pos.y - 7200;
         p.m_pos.x = p.m_pos.x + p.m_vel.x * 0.5 * i_dt;
         p.m_pos.y = p.m_pos.y + p.m_vel.y * 0.5 * i_dt;
     }
