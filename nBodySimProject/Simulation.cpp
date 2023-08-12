@@ -412,16 +412,14 @@ void Simulation::calculateAcceleration(Particle& particle)
 
 void Simulation::leapfrogUpdate(const double i_dt)
 {
-    // calc r_(i+1/2)
     for (Particle& p : m_particleContainer)
     {
+        // calc r_(i+1/2)
         p.m_pos.x = p.m_pos.x + p.m_vel.x * 0.5 * i_dt;
         p.m_pos.y = p.m_pos.y + p.m_vel.y * 0.5 * i_dt;
-    }
-    // calc a_(i+1/2)
-    for (Particle& p : m_particleContainer)
-    {
+
         // Calculate new acceleration based on updated positions
+        // calc a_(i+1/2)
         p.m_accel.x = 0.0;
         p.m_accel.y = 0.0;
         if (m_option == 2U)
@@ -432,18 +430,12 @@ void Simulation::leapfrogUpdate(const double i_dt)
         {
             calculateAcceleration(p);
         }
-    }
-    // calc v_(i+1) with a_(i+1/2)
-    for (Particle& p : m_particleContainer)
-    {
+        // calc v_(i+1) with a_(i+1/2)
         p.m_vel.x = p.m_vel.x + p.m_accel.x * i_dt;
         p.m_vel.y = p.m_vel.y + p.m_accel.y * i_dt;
         // calc vel scalar each round
         p.m_velScalar = calcLength(p.m_vel);
-    }
-    // calc r_(i+1) with v_(i+1)
-    for (Particle& p : m_particleContainer)
-    {
+        // calc r_(i+1) with v_(i+1)
         p.m_pos.x = p.m_pos.x + p.m_vel.x * 0.5 * i_dt;
         p.m_pos.y = p.m_pos.y + p.m_vel.y * 0.5 * i_dt;
     }
@@ -461,6 +453,6 @@ void Simulation::writeOutData()
     std::ofstream outFile("test.txt", std::ios::app);
     T = calcTotalKineticEnergy();
     U = calcTotalPotentialEnergy();
-    outFile << T << " " << U << " " << T + U  << std::endl;
+    outFile << T << " " << U << " " << T + U  << " " << 2*T+U << std::endl;
     outFile.close();
 }
