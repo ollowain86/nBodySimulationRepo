@@ -1,18 +1,10 @@
 What should be done for a correct simulation:
 
-- Plummerradius calculation with https://upload.wikimedia.org/wikibooks/de/f/fd/MehrkoerperproblemInDerAstronomie.pdf - Page 107
- I find out: Plummerradius = R/N, where R ist the radius of the total system and N the number of particles.
- I found out to implement a smoothing function u^2(r) to multiply with the plummer radius, page 104 ff. which works between 0 and 2*plummer.
+For some reason, the total energy is not conserved enough. It is conserving but, has too much up and downs.
+-> Why? Try different leap-frog calculation order, like first update position to x_(i+1/2), calculate there a(i+1/2), or update the velocity first? I saw different approaches in the internet. If nothing works try verlet algo.
  
- -> DONE
- 
-Test if forces are calculated correctly, especially for the plummer radius -> DONE with excel
 Make a window with bars to choose what to simulate
- -> include globular cluster, which should be in a circular shape
- -> make several globular clusters
- -> make a one with a global potential in a circular shape
- -> make a solar system
- -> make a heavy point mass moving, accompaied by sattelites
+ -> I implemented different simulation options, but no textbar to choose
  
 -> if number of particles is changing update plummer
 --> Idea: not for every particle, but for 10-20% changes in the number
@@ -26,9 +18,7 @@ Nice to have:
 Options:
 
 - Colors and effects (e.g. kinetic energy colors)
-- Different options to simulate (Solar system, global potential for galactic simulation, globular cluster)
 - merges
 
-Beneficial:
-
+Beneficial plotting command text:
 plot 'test.txt' using 0:1 with lines title 'Ekin', 'test.txt' using 0:2 with lines title 'Epot', 'test.txt' using 0:3 with lines title 'Etot', 'test.txt' using 0:4 with lines title 'Etot2'
